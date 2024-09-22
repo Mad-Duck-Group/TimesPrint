@@ -142,9 +142,18 @@ public class MovingPlatform : MonoBehaviour
     {
         GenerateBoxCastData();
         Vector3 startingPosition = transform.position + _offset;
-        if (!Physics2D.OverlapBox(startingPosition, _boxCastSize, 0, obstacleLayerMask))
+        ContactFilter2D contactFilter2D = new ContactFilter2D
         {
-            return;
+            useLayerMask = true
+        };
+        contactFilter2D.SetLayerMask(obstacleLayerMask);
+        Collider2D[] colliders = new Collider2D[10];
+        int colliderCount = Physics2D.OverlapBox(startingPosition, _boxCastSize, 0, contactFilter2D, colliders);
+        switch (colliderCount)
+        {
+            case 0:
+            case 1 when colliders[0].gameObject == gameObject:
+                return;
         }
         _changeDirectionPosition = transform.position;
         if (_changeDirectionCoroutine != null) return;
