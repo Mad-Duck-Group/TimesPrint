@@ -7,7 +7,10 @@ using UnityEngine.EventSystems;
 public enum PlaceableTypes
 {
     Platform,
-    MovingPlatform
+    MovingPlatform,
+    Jump,
+    Flip,
+    Stop
 }
 public abstract class Placeable : MonoBehaviour, IPointerClickHandler
 {
@@ -96,5 +99,15 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
         {
             Delete();
         }
+    }
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Trigger(other);
+    }
+
+    protected virtual void Trigger(Collider2D other)
+    {
+        
     }
 }
