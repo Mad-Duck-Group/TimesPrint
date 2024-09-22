@@ -144,6 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b09122225510d31488a92e6bdc706cb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  placeableType: 1
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 128
