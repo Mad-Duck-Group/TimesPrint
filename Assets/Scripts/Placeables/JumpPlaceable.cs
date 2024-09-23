@@ -7,7 +7,7 @@ public class JumpPlaceable : Placeable
     [SerializeField] private float jumpForce = 5;
    
     
-    protected override void Trigger(Collider2D other)
+    protected override void OnTrigger(Collider2D other)
     {
         if (other.gameObject == Player.Instance.gameObject)
         {

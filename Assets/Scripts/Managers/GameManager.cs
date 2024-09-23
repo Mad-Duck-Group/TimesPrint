@@ -30,7 +30,15 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private GameObject winPanel;
     
+    public delegate void PlayOrPauseDelegate(bool isPaused);
+    public PlayOrPauseDelegate playOrPauseDelegate;
+    
+    public delegate void RestartDelegate();
+    public RestartDelegate restartDelegate;
+    
+    
     private bool _isPaused;
+    public bool IsPaused => _isPaused;
 
     private void Awake()
     {
@@ -40,14 +48,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Time.timeScale = 0;
-        
         pauseButtonImage = pauseButtonImage.GetComponent<Image>();
         playButtonImage = playButtonImage.GetComponent<Image>();
-        
         winPanel.SetActive(false);
-        
         PlayOrPause();
-        
     }
     
     public void Play()
@@ -67,6 +71,7 @@ public class GameManager : MonoBehaviour
         Player.Instance.transform.position = Player.Instance.PlayerStartPosition;
         Player.Instance.isFlipped = false;
         Pause();
+        restartDelegate?.Invoke();
     }
 
     public void Win()
@@ -94,5 +99,6 @@ public class GameManager : MonoBehaviour
             playButtonImage.color = Color.gray;
             _isPaused = false;
         }
+        playOrPauseDelegate?.Invoke(_isPaused);
     }
 }

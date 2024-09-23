@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
         _playerStartPosition = transform.position;
     }
     
-    void FixedUpdate()
+    void Update()
     {
         if (isStop)
         { MovementStop(); }
@@ -81,7 +81,7 @@ public class Player : MonoBehaviour
         _movement = new Vector3(0, 0, 0);
         speed = 0;
         
-        _countdownTimer += Time.fixedDeltaTime;
+        _countdownTimer += Time.deltaTime;
         if (_countdownTimer >= countdownTime)
         {
             speed = 5;

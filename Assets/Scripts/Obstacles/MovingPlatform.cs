@@ -35,26 +35,48 @@ public class MovingPlatform : MonoBehaviour
     [SerializeField] 
     private LayerMask obstacleLayerMask;
     
+    private bool _isMoving;
     private Vector3 _startingPosition;
     private Vector3 _direction;
     private Vector3 _offset;
     private Vector3 _boxCastSize;
     private Coroutine _changeDirectionCoroutine;
     private Vector3 _changeDirectionPosition;
-    private bool _isMoving;
-    
-    public bool IsMoving
+
+    private void OnEnable()
     {
-        get => _isMoving;
-        set => _isMoving = value;
+        GameManager.Instance.playOrPauseDelegate += PlayOrPause;
+        GameManager.Instance.restartDelegate += Restart;
     }
     
-    // Start is called before the first frame update
-    void Start()
+    private void OnDisable()
+    {
+        if (!GameManager.Instance) return;
+        GameManager.Instance.playOrPauseDelegate -= PlayOrPause;
+        GameManager.Instance.restartDelegate -= Restart;
+    }
+
+    private void PlayOrPause(bool isPaused)
+    {
+        if (!isPaused) Initialize();
+        _isMoving = !isPaused;
+    }
+
+    private void Initialize()
     {
         _startingPosition = transform.position;
         GetStartingDirection();
         _changeDirectionPosition = transform.position - (_direction * distance);
+    }
+
+    private void Restart()
+    {
+        transform.position = _startingPosition;
+        GetStartingDirection();
+        if (_changeDirectionCoroutine != null)
+            StopCoroutine(_changeDirectionCoroutine);
+        _changeDirectionCoroutine = null;
+        GenerateBoxCastData();
     }
     
     private void GetStartingDirection()
@@ -85,7 +107,7 @@ public class MovingPlatform : MonoBehaviour
 
     private void Move()
     {
-        //if (!_isMoving) return;
+        if (!_isMoving) return;
         if (_changeDirectionCoroutine != null) return;
         transform.Translate(_direction * (speed * Time.deltaTime));
         if (!fixedDistance) return;
@@ -140,6 +162,7 @@ public class MovingPlatform : MonoBehaviour
     
     private void BoxCastCheck()
     {
+        if (!_isMoving) return;
         GenerateBoxCastData();
         Vector3 startingPosition = transform.position + _offset;
         ContactFilter2D contactFilter2D = new ContactFilter2D

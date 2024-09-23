@@ -103,10 +103,21 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
     
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Trigger(other);
+        OnTrigger(other);
     }
 
-    protected virtual void Trigger(Collider2D other)
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        OnCollision(other);
+    }
+
+
+    protected virtual void OnTrigger(Collider2D other)
+    {
+        
+    }
+    
+    protected virtual void OnCollision(Collision2D other)
     {
         
     }
