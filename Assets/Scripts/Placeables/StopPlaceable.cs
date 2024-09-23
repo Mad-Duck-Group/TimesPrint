@@ -8,7 +8,7 @@ public class StopPlaceable : Placeable
     {
         if (other.gameObject == Player.Instance.gameObject)
         {
-            if (Player.Instance.isStop == false) // use !
+            if (!Player.Instance.isStop)
             {
                 Player.Instance.isStop = true;
                 Debug.Log("Stop");

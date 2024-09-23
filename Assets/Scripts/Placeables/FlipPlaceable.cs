@@ -8,12 +8,12 @@ public class FlipPlaceable : Placeable
     {
         if (other.gameObject == Player.Instance.gameObject)
         {
-            if (Player.Instance.isFlipped == false) //you can !
+            if (!Player.Instance.isFlipped)
             {
                 Player.Instance.isFlipped = true;
                 Debug.Log("Flip");
             }
-            else if (Player.Instance.isFlipped == true) //remove check for true
+            else if (Player.Instance.isFlipped)
             {
                 Player.Instance.isFlipped = false;
                 Debug.Log("Normal");

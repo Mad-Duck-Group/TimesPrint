@@ -1,21 +1,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    int speed = 5; //make this serialized field
+    [SerializeField] int speed = 5;
     
-    private Vector3 movement; //add underscore to this variable, use the word _direction instead of movement
+    private Vector3 _movement;
     
     private static Player _instance;
-    public bool isFlipped = false; // remove false because it is already false by default, also use [ReadOnly] attribute
-    public bool isStop = false; // remove false because it is already false by default, also use [ReadOnly] attribute
+    [ReadOnly] public bool isFlipped;
+    [ReadOnly] public bool isStop;
     
-    public float countdownTime = 3f;
-
+    [SerializeField] private float countdownTime = 3f;
+    private float _countdownTimer;
+    
+    private Vector2 _playerStartPosition;
+    public Vector2 PlayerStartPosition => _playerStartPosition;
+    
+    private Rigidbody2D _playerRb;
+    
     public static Player Instance
     {
         get
@@ -31,57 +38,54 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         _instance = this;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
+        _playerRb = GetComponent<Rigidbody2D>();
+    }
+    
+    private void Start()
+    {
+        _playerStartPosition = transform.position;
     }
     
     void FixedUpdate()
     {
-        if (isStop == true) //no need to compare to true
-        {MovementStop();} //Remove brackets
-        
-        if (isFlipped == true)
-        {MovementBack();}
-        else if (isFlipped == false) //no need to compare to false use ! instead
-        {MovementNormal();}
+        if (isStop)
+        { MovementStop(); }
+        else
+        { Movement(); }
     }
 
     
-    // Combine MovementNormal and MovementBack into one method
-    // Change to rigidbody movement
-    // เดินหน้าอย่างเดียว
-    private void MovementNormal()
+    // Change to rigidbody movement**
+    private void Movement()
     {
-        movement = new Vector3(1, 0, 0); //use Vector3.right
-        transform.position += movement * (speed * Time.deltaTime); 
+        if (!isFlipped)
+        {
+            _movement = Vector3.right;
+            transform.position += _movement * (speed * Time.deltaTime); 
+        }
+        else
+        {
+            _movement = Vector3.left;
+            transform.position += _movement * (speed * Time.deltaTime);
+        }
     }
     
-    // เดินถอยหลัง
-    private void MovementBack()
+    public void Jump(float jumpForce)
     {
-        movement = new Vector3(-1, 0, 0); //use Vector3.left
-        transform.position += movement * (speed * Time.deltaTime);
+        _playerRb.velocity = new Vector2(0, jumpForce);
     }
-    
     
     private void MovementStop()
     {
-        movement = new Vector3(0, 0, 0);
-
-        float elapsedTime = 0f;
-
-        while (elapsedTime < countdownTime)
+        _movement = new Vector3(0, 0, 0);
+        speed = 0;
+        
+        _countdownTimer += Time.fixedDeltaTime;
+        if (_countdownTimer >= countdownTime)
         {
-            // รอไปเรื่อยๆ จนกว่าจะครบเวลาที่กำหนด
-            elapsedTime += Time.deltaTime;
-        }
-
-        if (elapsedTime >= countdownTime)
-        {
+            speed = 5;
+            _countdownTimer = 0;
             isStop = false;
         }
     }
