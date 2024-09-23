@@ -8,9 +8,11 @@ public enum PlaceableTypes
 {
     Platform,
     MovingPlatform,
-    Jump,
-    Flip,
-    Stop
+    PlayerJump,
+    PlayerFlip,
+    PlayerStop,
+    PlatformSpeed,
+    PlatformReverse
 }
 public abstract class Placeable : MonoBehaviour, IPointerClickHandler
 {
@@ -94,6 +96,7 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (!GameManager.Instance.IsPaused) return;
         if (eventData.button != PointerEventData.InputButton.Right) return;
         if (_placeByPlayer)
         {

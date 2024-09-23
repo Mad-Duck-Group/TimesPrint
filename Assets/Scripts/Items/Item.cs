@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -28,9 +29,24 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
     }
 
-    void Start()
+    private void OnEnable()
+    {
+        GameManager.Instance.playOrPauseDelegate += PlayOrPause;
+    }
+    
+    private void OnDisable()
+    {
+        if (!GameManager.Instance) return;
+        GameManager.Instance.playOrPauseDelegate -= PlayOrPause;
+    }
+
+    private void Awake()
     {
         _itemUIImage = GetComponent<Image>();
+    }
+
+    void Start()
+    {
         amountText.text = $"x{amount}";
         InstantiatePlaceable();
     }
@@ -43,6 +59,20 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         _itemInstance = Instantiate(itemPrefab, position, Quaternion.identity);
         _itemInstance.Initialize();
         _itemInstance.gameObject.SetActive(false);
+    }
+
+    private void PlayOrPause(bool isPaused)
+    {
+        if (isPaused)
+        {
+            _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 1f);
+            _itemUIImage.raycastTarget = true;
+        }
+        else
+        {
+            _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 0.5f);
+            _itemUIImage.raycastTarget = false;
+        }
     }
 
     public virtual void ChangeAmount(int value)
@@ -66,30 +96,35 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
+        //if (!GameManager.Instance.IsPaused) return;
         if (_mouseHoverTween.IsActive()) _mouseHoverTween.Kill();
-       _mouseHoverTween = transform.DOScale(1.2f, 0.2f);
+       _mouseHoverTween = transform.DOScale(1.2f, 0.2f).SetUpdate(true);
     }
 
     public virtual void OnPointerExit(PointerEventData eventData)
     {
+        //if (!GameManager.Instance.IsPaused) return;
         if (_mouseHoverTween.IsActive()) _mouseHoverTween.Kill();
-        _mouseHoverTween = transform.DOScale(1f, 0.2f);
+        _mouseHoverTween = transform.DOScale(1f, 0.2f).SetUpdate(true);
     }
 
     public virtual void OnBeginDrag(PointerEventData eventData)
     {
+        //if (!GameManager.Instance.IsPaused) return;
         _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 0f);
         _itemInstance.gameObject.SetActive(true);
     }
     
     public virtual void OnDrag(PointerEventData eventData)
     {
+        //if (!GameManager.Instance.IsPaused) return;
         _itemInstance.transform.position = MousePositionInWorld;
         _canPlace = _itemInstance.CanPlace();
     }
 
     public virtual void OnEndDrag(PointerEventData eventData)
     {
+       // if (!GameManager.Instance.IsPaused) return;
         if (_canPlace)
         {
             _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 1f);
