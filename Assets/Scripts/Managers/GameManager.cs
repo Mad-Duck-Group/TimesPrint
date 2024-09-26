@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            if (_instance == null)
+            if (!_instance)
             {
                 Debug.LogError("GameManager is null");
             }
@@ -21,16 +21,19 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    [Header("UI Buttons")]
-    [FormerlySerializedAs("pauseButton")] 
-    [SerializeField] private Image pauseButtonImage;
     
-    [FormerlySerializedAs("playButton")] 
-    [SerializeField] private Image playButtonImage;
+    [Header("UI Buttons")]
+    [FormerlySerializedAs("pauseButtonImage")] 
+    [SerializeField] private Button pauseButton;
+    
+    [FormerlySerializedAs("playButtonImage")] 
+    [SerializeField] private Button playButton;
+    
+    [SerializeField] private Button restartButton;
     
     [SerializeField] private GameObject winPanel;
     
-    public delegate void PlayOrPauseDelegate(bool isPaused);
+    public delegate void PlayOrPauseDelegate(bool isPaused, bool beforePlay);
     public PlayOrPauseDelegate playOrPauseDelegate;
     
     public delegate void RestartDelegate();
@@ -38,7 +41,10 @@ public class GameManager : MonoBehaviour
     
     
     private bool _isPaused;
+    private bool _beforePlay = true;
     public bool IsPaused => _isPaused;
+    public bool BeforePlay => _beforePlay;
+    
 
     private void Awake()
     {
@@ -48,8 +54,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Time.timeScale = 0;
-        pauseButtonImage = pauseButtonImage.GetComponent<Image>();
-        playButtonImage = playButtonImage.GetComponent<Image>();
         winPanel.SetActive(false);
         PlayOrPause();
     }
@@ -70,7 +74,8 @@ public class GameManager : MonoBehaviour
     {
         Player.Instance.transform.position = Player.Instance.PlayerStartPosition;
         Player.Instance.isFlipped = false;
-        Pause();
+        _beforePlay = true;
+        Pause(); 
         restartDelegate?.Invoke();
     }
 
@@ -89,16 +94,20 @@ public class GameManager : MonoBehaviour
     {
         if (Time.timeScale == 0)
         {
-            pauseButtonImage.color = Color.gray;
-            playButtonImage.color = Color.white;
+            pauseButton.interactable = false;
+            playButton.interactable = true;
+            restartButton.interactable = !_beforePlay;
             _isPaused = true;
+            
         }
         else
         {
-            pauseButtonImage.color = Color.white;
-            playButtonImage.color = Color.gray;
+            pauseButton.interactable = true;
+            playButton.interactable = false;
+            restartButton.interactable = true;
             _isPaused = false;
+            _beforePlay = false;
         }
-        playOrPauseDelegate?.Invoke(_isPaused);
+        playOrPauseDelegate?.Invoke(_isPaused, _beforePlay);
     }
 }

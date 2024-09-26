@@ -14,9 +14,10 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     [SerializeField] private TMP_Text amountText;
     private Image _itemUIImage;
     private Tween _mouseHoverTween;
-    private Placeable _itemInstance;
+    private Placeable _placeableInstance;
     private Vector3 _startPlaceablePosition;
     private bool _canPlace;
+    private bool _interactable = true;
     
     public PlaceableTypes PlaceableType => itemPrefab.PlaceableType;
     private Vector3 MousePositionInWorld
@@ -56,22 +57,24 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         Vector3 position = Camera.main.ScreenToWorldPoint(transform.position);
         position.z = 0;
         _startPlaceablePosition = position;
-        _itemInstance = Instantiate(itemPrefab, position, Quaternion.identity);
-        _itemInstance.Initialize();
-        _itemInstance.gameObject.SetActive(false);
+        _placeableInstance = Instantiate(itemPrefab, position, Quaternion.identity);
+        _placeableInstance.Initialize();
+        _placeableInstance.gameObject.SetActive(false);
     }
 
-    private void PlayOrPause(bool isPaused)
+    private void PlayOrPause(bool isPaused, bool beforePlay)
     {
-        if (isPaused)
+        if (beforePlay)
         {
             _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 1f);
             _itemUIImage.raycastTarget = true;
+            _interactable = true;
         }
         else
         {
             _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 0.5f);
             _itemUIImage.raycastTarget = false;
+            _interactable = false;
         }
     }
 
@@ -85,51 +88,55 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 1f);
             _itemUIImage.raycastTarget = true;
+            _interactable = true;
         }
         else
         {
             _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 0.5f);
             _itemUIImage.raycastTarget = false;
+            _interactable = false;
         }
         
     }
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
-        //if (!GameManager.Instance.IsPaused) return;
+        if (!_interactable) return;
         if (_mouseHoverTween.IsActive()) _mouseHoverTween.Kill();
        _mouseHoverTween = transform.DOScale(1.2f, 0.2f).SetUpdate(true);
     }
 
     public virtual void OnPointerExit(PointerEventData eventData)
     {
-        //if (!GameManager.Instance.IsPaused) return;
+        if (!_interactable) return;
         if (_mouseHoverTween.IsActive()) _mouseHoverTween.Kill();
         _mouseHoverTween = transform.DOScale(1f, 0.2f).SetUpdate(true);
     }
 
     public virtual void OnBeginDrag(PointerEventData eventData)
     {
-        //if (!GameManager.Instance.IsPaused) return;
+        if (!_interactable) return;
         _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 0f);
-        _itemInstance.gameObject.SetActive(true);
+        _placeableInstance.gameObject.SetActive(true);
+        _placeableInstance.SetSpriteOrder(2);
     }
     
     public virtual void OnDrag(PointerEventData eventData)
     {
-        //if (!GameManager.Instance.IsPaused) return;
-        _itemInstance.transform.position = MousePositionInWorld;
-        _canPlace = _itemInstance.CanPlace();
+        if (!_interactable) return;
+        _placeableInstance.transform.position = MousePositionInWorld;
+        _canPlace = _placeableInstance.CanPlace();
     }
 
     public virtual void OnEndDrag(PointerEventData eventData)
     {
-       // if (!GameManager.Instance.IsPaused) return;
+        if (!_interactable) return;
         if (_canPlace)
         {
+            _placeableInstance.SetSpriteOrder(1);
             _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 1f);
-            _itemInstance.Place();
-            _itemInstance.transform.position = MousePositionInWorld;
+            _placeableInstance.Place();
+            _placeableInstance.transform.position = MousePositionInWorld;
             _canPlace = false;
             ChangeAmount(-1);
             if (amount > 0)
@@ -137,9 +144,10 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
         else
         {
+            _placeableInstance.SetSpriteOrder(1);
             _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 1f);
-            _itemInstance.gameObject.SetActive(false);
-            _itemInstance.gameObject.transform.position = _startPlaceablePosition;
+            _placeableInstance.gameObject.SetActive(false);
+            _placeableInstance.gameObject.transform.position = _startPlaceablePosition;
             _canPlace = false;
         }
     }
