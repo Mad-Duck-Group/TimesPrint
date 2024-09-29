@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5786157634911449305}
   - component: {fileID: 940230073697419226}
   - component: {fileID: -644873298389159905}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: PlatformStopPlaceable
   m_TagString: Untagged
   m_Icon: {fileID: 0}

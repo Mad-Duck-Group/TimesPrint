@@ -19,6 +19,7 @@ public class PlatformSpeedPlaceable : Placeable
 
     protected override void DeactivateObjectItem()
     {
+        Debug.Log("adasdasd");
         _movingPlatform.Speed = _originalSpeed;
         _movingPlatform = null;
         base.DeactivateObjectItem();

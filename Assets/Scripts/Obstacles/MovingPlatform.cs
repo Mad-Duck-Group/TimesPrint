@@ -35,6 +35,7 @@ public class MovingPlatform : MonoBehaviour
     [SerializeField] 
     private LayerMask obstacleLayerMask;
     
+    private bool _initialized;
     private bool _isMoving;
     private Vector3 _startingPosition;
     private Vector3 _direction;
@@ -60,12 +61,32 @@ public class MovingPlatform : MonoBehaviour
 
     private void PlayOrPause(bool isPaused, bool beforePlay)
     {
-        if (!isPaused) Initialize();
+        switch (isPaused)
+        {
+            case false when !_initialized:
+                Initialize();
+                break;
+            case false:
+                RecheckDirection();
+                break;
+        }
+
         _isMoving = !isPaused;
+    }
+
+    private void RecheckDirection()
+    {
+        GetStartingDirection();
+        if (_changeDirectionCoroutine != null)
+            StopCoroutine(_changeDirectionCoroutine);
+        _changeDirectionCoroutine = null;
+        _changeDirectionPosition = transform.position - (_direction * distance);
+        GenerateBoxCastData();
     }
 
     private void Initialize()
     {
+        _initialized = true;
         _startingPosition = transform.position;
         GetStartingDirection();
         _changeDirectionPosition = transform.position - (_direction * distance);
@@ -93,11 +114,7 @@ public class MovingPlatform : MonoBehaviour
     private void Restart()
     {
         transform.position = _startingPosition;
-        GetStartingDirection();
-        if (_changeDirectionCoroutine != null)
-            StopCoroutine(_changeDirectionCoroutine);
-        _changeDirectionCoroutine = null;
-        GenerateBoxCastData();
+        RecheckDirection();
     }
     
     private void GetStartingDirection()
@@ -215,17 +232,31 @@ public class MovingPlatform : MonoBehaviour
         }
         if (fixedDistance)
         {
-            float sizeOffset;
-            if (_direction == Vector3.left || _direction == Vector3.right)
-            {
-                sizeOffset = transform.localScale.x / 2;
-            }
-            else
-            {
-                sizeOffset = transform.localScale.y / 2;
-            }
-            Gizmos.DrawLine(_startingPosition - (_direction * (distance + sizeOffset)), _startingPosition + (_direction * (distance + sizeOffset)));
+            Vector3[] positions = GetDrawLinePositions();
+            Gizmos.DrawLine(positions[0], positions[1]);
         }
         Gizmos.DrawWireCube(transform.position + _offset, _boxCastSize);
+    }
+    
+    public Vector3[] GetDrawLinePositions()
+    {
+        if (!_initialized)
+        {
+            _startingPosition = transform.position;
+            GetStartingDirection();
+        }
+        Vector3[] positions = new Vector3[2];
+        float sizeOffset;
+        if (_direction == Vector3.left || _direction == Vector3.right)
+        {
+            sizeOffset = transform.localScale.x / 2;
+        }
+        else
+        {
+            sizeOffset = transform.localScale.y / 2;
+        }
+        positions[0] = _startingPosition - (_direction * (distance + sizeOffset));
+        positions[1] = _startingPosition + (_direction * (distance + sizeOffset));
+        return positions;
     }
 }

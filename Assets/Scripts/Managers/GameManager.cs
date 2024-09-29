@@ -42,9 +42,10 @@ public class GameManager : MonoBehaviour
     
     private bool _isPaused;
     private bool _beforePlay = true;
+    private List<Placeable> _placeableList = new List<Placeable>();
     public bool IsPaused => _isPaused;
     public bool BeforePlay => _beforePlay;
-    
+
 
     private void Awake()
     {
@@ -109,5 +110,24 @@ public class GameManager : MonoBehaviour
             _beforePlay = false;
         }
         playOrPauseDelegate?.Invoke(_isPaused, _beforePlay);
+    }
+    
+    public void AddPlaceable(Placeable placeable)
+    {
+        _placeableList.Add(placeable);
+    }
+    
+    public void RemovePlaceable(Placeable placeable)
+    {
+        _placeableList.Remove(placeable);
+    }
+
+    public void ClearPlaceable()
+    {
+        foreach (var placeable in _placeableList)
+        {
+            placeable.Remove();
+        }
+        _placeableList.Clear();
     }
 }

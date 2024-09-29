@@ -28,9 +28,9 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
     private LayerMask targetLayer;
     
     [ReadOnly][SerializeField][HideIf(nameof(_isObjectItem))] private Placeable objectItem;
-    private SpriteRenderer _spriteRenderer;
+    protected SpriteRenderer spriteRenderer;
     private Color _originalColor;
-    private Collider2D _collider;
+    protected Collider2D placeableCollider;
     private bool _placeByPlayer;
     private bool _isObjectItem;
     protected Placeable targetPlaceable;
@@ -45,13 +45,20 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
     
     private void OnEnable()
     {
+        GameManager.Instance.playOrPauseDelegate += PlayOrPause;
         GameManager.Instance.restartDelegate += Restart;
     }
     
     private void OnDisable()
     {
         if (!GameManager.Instance) return;
+        GameManager.Instance.playOrPauseDelegate -= PlayOrPause;
         GameManager.Instance.restartDelegate -= Restart;
+    }
+    
+    protected virtual void PlayOrPause(bool isPaused, bool beforePlay)
+    {
+        
     }
     
     protected virtual void Restart()
@@ -62,19 +69,22 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
 
     public virtual void Initialize()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        _collider = GetComponent<Collider2D>();
-        _originalColor = _spriteRenderer.color;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        placeableCollider = GetComponent<Collider2D>();
+        _originalColor = spriteRenderer.color;
         CheckIfObjectItem();
     }
 
     public virtual void Place()
     {
         _placeByPlayer = true;
-        _spriteRenderer.color = _originalColor;
+        spriteRenderer.color = _originalColor;
+        if (!_isObjectItem) GameManager.Instance.AddPlaceable(this);
         if (!_isObjectItem || !targetPlaceable) return;
+        GameManager.Instance.AddPlaceable(targetPlaceable);
         targetPlaceable.AssignObjectItem(this);
-        _spriteRenderer.color = Color.clear;
+        spriteRenderer.color = Color.clear;
+        placeableCollider.enabled = false;
     }
 
     public virtual void AssignObjectItem(Placeable item)
@@ -108,17 +118,11 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
     {
         
     }
-    
-    public virtual void RemoveObjectItem()
-    {
-        objectItem.DeactivateObjectItem();
-        objectItem = null;
-    }
 
     public virtual bool CanPlace()
     {
         bool canPlace = false;
-        switch (_collider)
+        switch (placeableCollider)
         {
             case BoxCollider2D:
                 canPlace = CanPlaceBoxCollider();
@@ -131,34 +135,53 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
                 break;
         }
         canPlace = PlaceableAreaManager.Instance.WithinBound(transform) && canPlace;
-        _spriteRenderer.color = canPlace ? Color.green : Color.red;
+        spriteRenderer.color = canPlace ? Color.green : Color.red;
         return canPlace;
     }
     
     public virtual void SetSpriteOrder(int order)
     {
-        _spriteRenderer.sortingOrder = order;
+        spriteRenderer.sortingOrder = order;
     }
 
     public virtual void Remove()
     {
+        if (_isObjectItem) return;
         if (!objectItem)
         {
-            ItemManager.Instance.ChangeItemAmount(placeableType);
-            _placeByPlayer = false;
-            Destroy(gameObject);
+            RemoveObject();
         }
         else
         {
-            ItemManager.Instance.ChangeItemAmount(objectItem.PlaceableType);
             RemoveObjectItem();
         }
     }
+
+    protected virtual void RemoveFromClick()
+    {
+        GameManager.Instance.RemovePlaceable(this);
+        Remove();
+    }
+
+    public virtual void RemoveObject()
+    {
+        ItemManager.Instance.ChangeItemAmount(placeableType);
+        _placeByPlayer = false;
+        Destroy(gameObject);
+    }
     
+    public virtual void RemoveObjectItem()
+    {
+        ItemManager.Instance.ChangeItemAmount(objectItem.PlaceableType);
+        objectItem.DeactivateObjectItem();
+        Destroy(objectItem.gameObject);
+        objectItem = null;
+    }
+
     protected virtual bool CanPlaceBoxCollider()
     {
-        Vector2 size = _collider.bounds.size;
-        Vector2 position = _collider.bounds.center;
+        Vector2 size = placeableCollider.bounds.size;
+        Vector2 position = placeableCollider.bounds.center;
         Collider2D[] result = new Collider2D[10];
         if (!_isObjectItem)
         {
@@ -178,8 +201,8 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
     
     protected virtual bool CanPlaceCircleCollider()
     {
-        float radius = _collider.bounds.extents.x;
-        Vector2 position = _collider.bounds.center;
+        float radius = placeableCollider.bounds.extents.x;
+        Vector2 position = placeableCollider.bounds.center;
         Collider2D[] result = new Collider2D[10];
         if (!_isObjectItem)
         {
@@ -199,8 +222,8 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
     
     protected virtual bool CanPlaceCapsuleCollider()
     {
-        Vector2 size = _collider.bounds.size;
-        Vector2 position = _collider.bounds.center;
+        Vector2 size = placeableCollider.bounds.size;
+        Vector2 position = placeableCollider.bounds.center;
         Collider2D[] result = new Collider2D[10];
         if (!_isObjectItem)
         {
@@ -224,7 +247,7 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
         if (eventData.button != PointerEventData.InputButton.Right) return;
         if (_placeByPlayer)
         {
-            Remove();
+            RemoveFromClick();
         }
     }
     
