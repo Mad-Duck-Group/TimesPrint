@@ -42,6 +42,8 @@ public class MovingPlatform : MonoBehaviour
     private Vector3 _boxCastSize;
     private Coroutine _changeDirectionCoroutine;
     private Vector3 _changeDirectionPosition;
+    
+    public float Speed { get => speed; set => speed = value; }
 
     private void OnEnable()
     {
@@ -56,7 +58,7 @@ public class MovingPlatform : MonoBehaviour
         GameManager.Instance.restartDelegate -= Restart;
     }
 
-    private void PlayOrPause(bool isPaused)
+    private void PlayOrPause(bool isPaused, bool beforePlay)
     {
         if (!isPaused) Initialize();
         _isMoving = !isPaused;
@@ -67,6 +69,25 @@ public class MovingPlatform : MonoBehaviour
         _startingPosition = transform.position;
         GetStartingDirection();
         _changeDirectionPosition = transform.position - (_direction * distance);
+    }
+    
+    public void ReverseDirection()
+    {
+        switch (startingDirection)
+        {
+            case MovingPlatformStartingDirection.Left:
+                startingDirection = MovingPlatformStartingDirection.Right;
+                break;
+            case MovingPlatformStartingDirection.Right:
+                startingDirection = MovingPlatformStartingDirection.Left;
+                break;
+            case MovingPlatformStartingDirection.Up:
+                startingDirection = MovingPlatformStartingDirection.Down;
+                break;
+            case MovingPlatformStartingDirection.Down:
+                startingDirection = MovingPlatformStartingDirection.Up;
+                break;
+        }
     }
 
     private void Restart()
