@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     public Vector2 PlayerStartPosition => _playerStartPosition;
     
     private Rigidbody2D _playerRb;
+    public PointManager pointManager;
     
     public static Player Instance
     {
@@ -29,7 +30,7 @@ public class Player : MonoBehaviour
         {
             if (_instance == null)
             {
-                Debug.LogError("Game Manager is null");
+                Debug.LogError("Player is null");
             }
             return _instance;
         }
@@ -87,6 +88,16 @@ public class Player : MonoBehaviour
             speed = 5;
             _countdownTimer = 0;
             isStop = false;
+        }
+    }
+    
+    // Collect star สำหรับเพิ่มคะแนน
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Star"))
+        {
+            pointManager.CollectStar();  // เรียกฟังก์ชัน CollectStar เมื่อชนกับไอเท็มดาว
+            Destroy(other.gameObject);  // ลบไอเท็มดาวออกจากเกม
         }
     }
 }
