@@ -927,6 +927,16 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 262285782}
   m_CullTransparentMesh: 1
+--- !u!1 &417128616 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6264870291131820578, guid: f14930c1068d1214b809ab3028a98a8b, type: 3}
+  m_PrefabInstance: {fileID: 2126168504}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &430334935 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6264870291131820578, guid: f14930c1068d1214b809ab3028a98a8b, type: 3}
+  m_PrefabInstance: {fileID: 173948256}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &453697416
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1966,6 +1976,7 @@ MonoBehaviour:
   playButton: {fileID: 1146676090}
   restartButton: {fileID: 262285784}
   winPanel: {fileID: 795838817}
+  pointManager: {fileID: 1966432544}
 --- !u!1 &1015388467
 GameObject:
   m_ObjectHideFlags: 0
@@ -2493,6 +2504,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1376850156}
   m_CullTransparentMesh: 1
+--- !u!1 &1381686198 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6264870291131820578, guid: f14930c1068d1214b809ab3028a98a8b, type: 3}
+  m_PrefabInstance: {fileID: 2001132074}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1389429760
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3888,6 +3904,10 @@ MonoBehaviour:
   - {fileID: 2040070448}
   starEmpty: {fileID: 1397528484, guid: fa85c7b01462f0647afc1d8e9e1e9db7, type: 3}
   starFull: {fileID: 1524999138, guid: fa85c7b01462f0647afc1d8e9e1e9db7, type: 3}
+  starObj:
+  - {fileID: 1381686198}
+  - {fileID: 417128616}
+  - {fileID: 430334935}
 --- !u!4 &1966432545
 Transform:
   m_ObjectHideFlags: 0
