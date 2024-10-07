@@ -77,6 +77,7 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
 
     public virtual void Place()
     {
+        SoundManager.Instance.PlaySoundFX(_isObjectItem ? SoundFXTypes.MousePlaceObjectItem : SoundFXTypes.MousePlaceObject, out _);
         _placeByPlayer = true;
         spriteRenderer.color = _originalColor;
         if (!_isObjectItem) GameManager.Instance.AddPlaceable(this);
@@ -165,6 +166,7 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
 
     public virtual void RemoveObject()
     {
+        SoundManager.Instance.PlaySoundFX(SoundFXTypes.MouseDeleteObject, out _);
         ItemManager.Instance.ChangeItemAmount(placeableType);
         _placeByPlayer = false;
         Destroy(gameObject);
@@ -172,6 +174,7 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
     
     public virtual void RemoveObjectItem()
     {
+        SoundManager.Instance.PlaySoundFX(SoundFXTypes.MouseDeleteObjectItem, out _);
         ItemManager.Instance.ChangeItemAmount(objectItem.PlaceableType);
         objectItem.DeactivateObjectItem();
         Destroy(objectItem.gameObject);
@@ -264,7 +267,7 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
 
     protected virtual void OnTrigger(Collider2D other)
     {
-        
+       
     }
     
     protected virtual void OnCollision(Collision2D other)
