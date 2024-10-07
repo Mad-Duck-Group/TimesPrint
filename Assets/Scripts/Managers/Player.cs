@@ -33,6 +33,7 @@ public class Player : MonoBehaviour
 
     private Rigidbody2D _playerRb;
     private BoxCollider2D _boxCollider;
+    private SpriteRenderer _spriteRenderer;
 
     [Header("Animation")]
     private Animator _anim;
@@ -62,6 +63,7 @@ public class Player : MonoBehaviour
     {
         _anim = GetComponent<Animator>();
         _boxCollider = GetComponent<BoxCollider2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _instance = this;
         _playerRb = GetComponent<Rigidbody2D>();
         _originalSpeed = speed;
@@ -106,11 +108,13 @@ public class Player : MonoBehaviour
         {
             _movement = Vector3.right;
             transform.position += _movement * (speed * Time.deltaTime);
+            _spriteRenderer.flipX = false;
         }
         else
         {
             _movement = Vector3.left;
             transform.position += _movement * (speed * Time.deltaTime);
+            _spriteRenderer.flipX = true;
         }
 
         // เปลี่ยนสถานะเป็น Move เมื่อเคลื่อนไหว
