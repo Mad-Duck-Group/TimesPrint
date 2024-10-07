@@ -21,16 +21,12 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    
-    
     [Header("UI Buttons")]
-    [FormerlySerializedAs("pauseButtonImage")] 
     [SerializeField] private Button pauseButton;
-    
-    [FormerlySerializedAs("playButtonImage")] 
     [SerializeField] private Button playButton;
-    
     [SerializeField] private Button restartButton;
+    [SerializeField] private Button clearButton;
+    [SerializeField] private Button pausePanelButton;
     [SerializeField] private GameObject pausedPanel;
     [SerializeField] private GameObject winPanel;
     [SerializeField] private Image[] stars;
@@ -41,33 +37,76 @@ public class GameManager : MonoBehaviour
     public delegate void RestartDelegate();
     public RestartDelegate restartDelegate;
     
-    
+    public delegate void FinishLoadingDelegate();
+    public FinishLoadingDelegate finishLoadingDelegate;
+
+    private bool _finishLoading;
     private bool _isPaused;
     private bool _beforePlay = true;
     private List<Placeable> _placeableList = new List<Placeable>();
     public bool IsPaused => _isPaused;
+    public bool FinishLoading => _finishLoading;
     public bool BeforePlay => _beforePlay;
     
     private AudioSource _bgmAudioSource;
     private BGMTypes _currentBGM = BGMTypes.GamePlay;
 
+
+    private void OnEnable()
+    {
+        SceneManager.activeSceneChanged += OnActiveSceneChange;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    
+    private void OnDisable()
+    {
+        SceneManager.activeSceneChanged -= OnActiveSceneChange;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    
+    private void OnActiveSceneChange(Scene previousScene, Scene scene)
+    {
+        if (scene.name != SceneManager.GetActiveScene().name) return;
+        Initialize();
+    }
+    
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name != SceneManager.GetActiveScene().name) return;
+        Initialize();
+    }
+
+    private void Initialize()
+    {
+        SoundManager.Instance.PlaySoundFX(SoundFXTypes.Start, out _);
+        _finishLoading = true;
+        finishLoadingDelegate?.Invoke();
+        clearButton.interactable = true;
+        pausePanelButton.interactable = true;
+        PlayOrPause();
+    }
+
     private void Awake()
     {
         _instance = this;
-    }
-
-    void Start()
-    {
         Time.timeScale = 0;
         pausedPanel.SetActive(false);
         winPanel.SetActive(false);
-        PlayOrPause();
+        playButton.interactable = false;
+        restartButton.interactable = false;
+        pauseButton.interactable = false;
+        clearButton.interactable = false;
+        pausePanelButton.interactable = false;
     }
-    
+
+    private void Start()
+    {
+        
+    }
+
     public void Play()
     {
         SoundManager.Instance.PlaySoundFX(SoundFXTypes.TimeControlButton, out _);
-        SoundManager.Instance.PlaySoundFX(SoundFXTypes.Start, out _);
         Time.timeScale = 1;
         PlayOrPause();
     }
@@ -160,7 +199,7 @@ public class GameManager : MonoBehaviour
     public void ToMainMenu()
     {
         if (_bgmAudioSource) SoundManager.Instance.StopSound(_bgmAudioSource);
-        SceneManager.LoadScene("MainMenu");
+        SceneManagerPersistent.Instance.LoadNextScene(SceneTypes.MainMenu, LoadSceneMode.Single, false);
     }
 
     public void AddPlaceable(Placeable placeable)

@@ -269,7 +269,7 @@ RectTransform:
   m_Father: {fileID: 1553402541}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 78.5468}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1073,11 +1073,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4418609958669234016, guid: f14930c1068d1214b809ab3028a98a8b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.76
+      value: -7.48
       objectReference: {fileID: 0}
     - target: {fileID: 4418609958669234016, guid: f14930c1068d1214b809ab3028a98a8b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.01
+      value: -0.27
       objectReference: {fileID: 0}
     - target: {fileID: 4418609958669234016, guid: f14930c1068d1214b809ab3028a98a8b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2084,7 +2084,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &558422578
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3152,6 +3152,8 @@ MonoBehaviour:
   pauseButton: {fileID: 2077647290}
   playButton: {fileID: 1146676090}
   restartButton: {fileID: 262285784}
+  clearButton: {fileID: 756172941}
+  pausePanelButton: {fileID: 10112599}
   pausedPanel: {fileID: 558422577}
   winPanel: {fileID: 795838817}
   stars:
@@ -6150,7 +6152,7 @@ RectTransform:
   m_Father: {fileID: 65385511}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6202,11 +6204,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4418609958669234016, guid: f14930c1068d1214b809ab3028a98a8b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.24
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 4418609958669234016, guid: f14930c1068d1214b809ab3028a98a8b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.19
+      value: 2.82
       objectReference: {fileID: 0}
     - target: {fileID: 4418609958669234016, guid: f14930c1068d1214b809ab3028a98a8b, type: 3}
       propertyPath: m_LocalPosition.z
