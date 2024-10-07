@@ -8,8 +8,8 @@ public class Star : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            //GameManager.CollectStar();
-            Destroy(gameObject);
+            PointManager.Instance.CollectStar();  // เรียกฟังก์ชัน CollectStar เมื่อชนกับไอเท็มดาว
+            gameObject.SetActive(false);
         }
     }
 }

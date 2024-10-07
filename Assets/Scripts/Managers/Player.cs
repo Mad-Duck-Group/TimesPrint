@@ -29,10 +29,9 @@ public class Player : MonoBehaviour
     public Vector2 PlayerStartPosition => _playerStartPosition;
 
     private Rigidbody2D _playerRb;
-    public PointManager pointManager;
 
     [Header("Animation")]
-    private Animator anim;
+    private Animator _anim;
 
     // เพิ่มตัวแปรสำหรับจัดการสถานะ
     public UnitState state;
@@ -55,7 +54,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        anim = GetComponent<Animator>();
+        _anim = GetComponent<Animator>();
 
         _instance = this;
         _playerRb = GetComponent<Rigidbody2D>();
@@ -128,32 +127,22 @@ public class Player : MonoBehaviour
     // ฟังก์ชันสำหรับเลือกอนิเมชันตามสถานะของตัวละคร
     private void ChooseAnimation()
     {
-        anim.SetBool(Player_Idle, false);
-        anim.SetBool(Player_Walk, false);
-        anim.SetBool(Player_Jump, false);
+        _anim.SetBool(Player_Idle, false);
+        _anim.SetBool(Player_Walk, false);
+        _anim.SetBool(Player_Jump, false);
 
         // ตรวจสอบสถานะของตัวละครและเล่นอนิเมชันที่เหมาะสม
         if (state == UnitState.Idle)
         {
-            anim.SetBool(Player_Idle, true);
+            _anim.SetBool(Player_Idle, true);
         }
         else if (state == UnitState.Move)
         {
-            anim.SetBool(Player_Walk, true);
+            _anim.SetBool(Player_Walk, true);
         }
         else if (state == UnitState.Jump)
         {
-            anim.SetBool(Player_Jump, true);
-        }
-    }
-
-    // Collect star สำหรับเพิ่มคะแนน
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Star"))
-        {
-            pointManager.CollectStar();  // เรียกฟังก์ชัน CollectStar เมื่อชนกับไอเท็มดาว
-            other.gameObject.SetActive(false);
+            _anim.SetBool(Player_Jump, true);
         }
     }
 }
