@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class PointManager : MonoBehaviour
 {
+    private static PointManager _instance;
+    
     public Image[] stars;  // Array สำหรับเก็บ Image ของดาวแต่ละดวง
     public Sprite starEmpty;  // ภาพดาวเปล่า
     public Sprite starFull;   // ภาพดาวเต็ม
@@ -14,6 +16,23 @@ public class PointManager : MonoBehaviour
     
     private int starsCollected = 0;  // จำนวนดาวที่เก็บได้
 
+    public static PointManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                Debug.LogError("PointManager is null");
+            }
+            return _instance;
+        }
+    }
+    
+    private void Awake()
+    {
+        _instance = this;
+    }
+    
     // ฟังก์ชันสำหรับอัพเดตภาพดาว
     public void CollectStar()
     {
