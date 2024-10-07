@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
     public bool IsPaused => _isPaused;
     public bool BeforePlay => _beforePlay;
 
+    public PointManager pointManager;
 
     private void Awake()
     {
@@ -68,6 +69,7 @@ public class GameManager : MonoBehaviour
     public void Pause()
     {
         Time.timeScale = 0;
+        
         PlayOrPause();
     }
     
@@ -78,6 +80,7 @@ public class GameManager : MonoBehaviour
         _beforePlay = true;
         Pause(); 
         restartDelegate?.Invoke();
+        pointManager.ResetStars();
     }
 
     public void Win()
