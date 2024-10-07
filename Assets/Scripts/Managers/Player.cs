@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] int speed = 5;
     [SerializeField] LayerMask groundLayer; // เพิ่มการตรวจสอบพื้น
-    [SerializeField] private Vector2 boxCastSize = new Vector2(1f, 0.1f);  // ขนาดของ BoxCast สำหรับการเช็คพื้น
+    [SerializeField] private float boxCastDistance = 0.1f;
     private Vector3 _movement;
 
     private static Player _instance;
@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
     public Vector2 PlayerStartPosition => _playerStartPosition;
 
     private Rigidbody2D _playerRb;
+    private BoxCollider2D _boxCollider;
 
     [Header("Animation")]
     private Animator _anim;
@@ -59,7 +60,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         _anim = GetComponent<Animator>();
-
+        _boxCollider = GetComponent<BoxCollider2D>();
         _instance = this;
         _playerRb = GetComponent<Rigidbody2D>();
     }
@@ -141,15 +142,11 @@ public class Player : MonoBehaviour
     
     private bool IsGrounded()
     {
-        bool onGround;
-        
-        Vector3 boxCastPosition = new Vector3(transform.position.x, transform.position.y - transform.localScale.y/2, transform.position.z);
-        
+        Vector2 boxCastPosition = new Vector3(_boxCollider.bounds.center.x,
+            _boxCollider.bounds.center.y - _boxCollider.size.y * transform.localScale.y / 2);
+        Vector2 size = new Vector2(_boxCollider.size.x, boxCastDistance) * transform.localScale;
         // ทำการ BoxCast ใต้ตัวละครเพื่อตรวจสอบการสัมผัสพื้น
-        onGround = Physics2D.BoxCast(boxCastPosition, boxCastSize, 0, Vector2.down, 0.1f, groundLayer);
-        
-        Debug.Log(onGround);
-        
+        bool onGround = Physics2D.BoxCast(boxCastPosition, size, 0, Vector2.down, 0.1f, groundLayer);
         return onGround;  // ถ้ามีการชนกับพื้น ให้คืนค่า true
     }
 
@@ -200,5 +197,15 @@ public class Player : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (!_boxCollider) _boxCollider = GetComponent<BoxCollider2D>();
+        Vector2 boxCastPosition = new Vector3(_boxCollider.bounds.center.x,
+            _boxCollider.bounds.center.y - _boxCollider.size.y * transform.localScale.y / 2);
+        Vector2 size = new Vector2(_boxCollider.size.x, boxCastDistance) * transform.localScale;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(boxCastPosition, size);
     }
 }
