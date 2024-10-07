@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public enum SoundFXTypes
 {
@@ -24,14 +26,19 @@ public enum SoundFXTypes
     CoinCollect,
     Win,
     Lose,
-    Popup,
-    CoinCheck
+    Popup
 }
 
 public enum PlayerFXTypes
 {
     Walk,
     Death
+}
+public enum MixerTypes
+{
+    Master,
+    BGM,
+    SFX
 }
 
 public enum BGMTypes
@@ -57,8 +64,10 @@ public class SoundManager : MonoBehaviour
 
     [Header("Sound Settings")]
     [SerializeField] private int poolSize = 10;
-    [SerializeField] AudioMixerGroup audioMixerGroup;
-    
+    [SerializeField] private AudioMixerGroup masterGroup;
+    [SerializeField] private AudioMixerGroup bgmGroup;
+    [SerializeField] private AudioMixerGroup sfxGroup;
+
     [Header("General FX")]
     [SerializeField] private AudioClip mousePointButton;
     [SerializeField] private AudioClip mouseClickButton;
@@ -131,7 +140,7 @@ public class SoundManager : MonoBehaviour
         GameObject soundGameObject = new GameObject($"AudioSource{_audioSources.Count}");
         soundGameObject.transform.SetParent(transform);
         AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
-        audioSource.outputAudioMixerGroup = audioMixerGroup;
+        audioSource.outputAudioMixerGroup = sfxGroup;
         _audioSources.Add(audioSource);
         audioSource.playOnAwake = false;
     }
@@ -142,7 +151,7 @@ public class SoundManager : MonoBehaviour
         return audioSource;
     }
     
-    public void PlaySound(AudioClip clip, out AudioSource audioSource, bool loop, AudioSource preset = null)
+    public void PlaySound(AudioClip clip, out AudioSource audioSource, bool loop, MixerTypes mixerType, AudioSource preset = null)
     {
         audioSource = null;
         if (!clip) return;
@@ -154,6 +163,20 @@ public class SoundManager : MonoBehaviour
         }
         source.loop = loop;
         source.clip = clip;
+        AudioMixerGroup mixerGroup = null;
+        switch (mixerType)
+        {
+            case MixerTypes.Master:
+                mixerGroup = masterGroup;
+                break;
+            case MixerTypes.BGM:
+                mixerGroup = bgmGroup;
+                break;
+            case MixerTypes.SFX:
+                mixerGroup = sfxGroup;
+                break;
+        }
+        source.outputAudioMixerGroup = mixerGroup;
         if (preset) ApplyPreset(source, preset);
         source.Play();
         audioSource = source;
@@ -227,22 +250,107 @@ public class SoundManager : MonoBehaviour
     public void PlaySoundFX(SoundFXTypes soundFXType, out AudioSource audioSource, bool loop = false, AudioSource preset = null)
     {
         AudioClip clip = null;
+        AudioSource source = null;
         switch (soundFXType)
         {
-            
+            case SoundFXTypes.MousePointButton:
+                clip = mousePointButton;
+                break;
+            case SoundFXTypes.MouseClickButton:
+                clip = mouseClickButton;
+                break;
+            case SoundFXTypes.ResetButton:
+                clip = resetButton;
+                break;
+            case SoundFXTypes.TimeControlButton:
+                clip = timeControlButton;
+                break;
+            case SoundFXTypes.MousePoint:
+                clip = mousePoint;
+                break;
+            case SoundFXTypes.MouseClick:
+                clip = mouseClick;
+                break;
+            case SoundFXTypes.MouseDeleteObject:
+                clip = mouseDeleteObject;
+                break;
+            case SoundFXTypes.MouseDeleteObjectItem:
+                clip = mouseDeleteObjectItem;
+                break;
+            case SoundFXTypes.MousePlaceObject:
+                clip = mousePlaceObject;
+                break;
+            case SoundFXTypes.MousePlaceObjectItem:
+                clip = mousePlaceObjectItem;
+                break;
+            case SoundFXTypes.MousePlaceFail:
+                clip = mousePlaceFail;
+                break;
+            case SoundFXTypes.SceneTransition:
+                clip = sceneTransition;
+                break;
+            case SoundFXTypes.Start:
+                clip = start;
+                break;
+            case SoundFXTypes.HitObject:
+                clip = hitObject;
+                break;
+            case SoundFXTypes.CoinCollect:
+                clip = coinCollect;
+                break;
+            case SoundFXTypes.Win:
+                clip = win;
+                break;
+            case SoundFXTypes.Lose:
+                clip = lose;
+                break;
+            case SoundFXTypes.Popup:
+                clip = popup;
+                break;
         }
-        PlaySound(clip, out AudioSource source, loop, preset);
+        PlaySound(clip, out source, loop, MixerTypes.SFX, preset);
         audioSource = source;
     }
 
+    public void PlayCoinCheck(out AudioSource audioSource, int index, bool loop = false, AudioSource preset = null)
+    {
+        var clip = coinCheck[index];
+        PlaySound(clip, out var source, loop, MixerTypes.SFX, preset);
+        audioSource = source;
+    }
+
+    public void PlayPlayerFX(PlayerFXTypes playerFXType, out AudioSource audioSource, bool loop = false, AudioSource preset = null)
+    {
+        AudioClip clip = null;
+        switch (playerFXType)
+        {
+            case PlayerFXTypes.Walk:
+                clip = walk;
+                loop = true;
+                break;
+            case PlayerFXTypes.Death:
+                clip = death;
+                break;
+        }
+        PlaySound(clip, out AudioSource source, loop, MixerTypes.SFX, preset);
+        audioSource = source;
+    }
     public void PlayBGM(BGMTypes bgmType, out AudioSource audioSource, bool loop = true, AudioSource preset = null)
     {
         AudioClip clip = null;
         switch (bgmType)
         {
-            
+            case BGMTypes.GamePlan:
+                clip = gamePlanBGM;
+                break;
+            case BGMTypes.GamePlay:
+                clip = gamePlayBGM;
+                break;
+            case BGMTypes.MainMenu:
+                clip = mainMenuBGM;
+                break;
         }
-        PlaySound(clip, out AudioSource source, loop, preset);
+        PlaySound(clip, out AudioSource source, loop, MixerTypes.BGM, preset);
         audioSource = source;
     }
     
@@ -251,8 +359,8 @@ public class SoundManager : MonoBehaviour
         //translate the volume from 0-1 to -80-0
         _masterVolume = volume;
         volume = Mathf.Log10(Mathf.Max(volume, 0.0001f)) * 20;
-        audioMixerGroup.audioMixer.SetFloat("MasterVolume", volume);
-        if (_volumeSliderAudioSource && _volumeSliderAudioSource.isPlaying) return;
-        //PlaySoundFX(SoundFXTypes.VolumeSlider, out _volumeSliderAudioSource);
+        masterGroup.audioMixer.SetFloat("MasterVolume", volume);
+        // if (_volumeSliderAudioSource && _volumeSliderAudioSource.isPlaying) return;
+        // PlaySoundFX(SoundFXTypes.VolumeSlider, out _volumeSliderAudioSource);
     }
 }

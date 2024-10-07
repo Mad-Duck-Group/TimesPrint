@@ -9,9 +9,8 @@ public class JumpPlaceable : Placeable
     
     protected override void OnTrigger(Collider2D other)
     {
-        if (other.gameObject == Player.Instance.gameObject)
-        {
-            Player.Instance.Jump(jumpForce);
-        }
+        if (other.gameObject != Player.Instance.gameObject) return;
+        SoundManager.Instance.PlaySoundFX(SoundFXTypes.HitObject, out _);
+        Player.Instance.Jump(jumpForce);
     }
 }

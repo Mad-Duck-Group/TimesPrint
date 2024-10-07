@@ -17,7 +17,7 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private Placeable _placeableInstance;
     private Vector3 _startPlaceablePosition;
     private bool _canPlace;
-    private bool _interactable = true;
+    private bool _interactable;
     
     public PlaceableTypes PlaceableType => itemPrefab.PlaceableType;
     private Vector3 MousePositionInWorld
@@ -33,22 +33,30 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private void OnEnable()
     {
         GameManager.Instance.playOrPauseDelegate += PlayOrPause;
+        GameManager.Instance.finishLoadingDelegate += Initialize;
     }
     
     private void OnDisable()
     {
         if (!GameManager.Instance) return;
         GameManager.Instance.playOrPauseDelegate -= PlayOrPause;
+        GameManager.Instance.finishLoadingDelegate -= Initialize;
     }
 
     private void Awake()
     {
         _itemUIImage = GetComponent<Image>();
+        amountText.text = $"x{amount}";
+        DeactivateItem();
     }
 
     void Start()
     {
-        amountText.text = $"x{amount}";
+        
+    }
+
+    private void Initialize()
+    {
         InstantiatePlaceable();
     }
     
@@ -66,16 +74,26 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         if (beforePlay)
         {
-            _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 1f);
-            _itemUIImage.raycastTarget = true;
-            _interactable = true;
+            ActivateItem();
         }
         else
         {
-            _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 0.5f);
-            _itemUIImage.raycastTarget = false;
-            _interactable = false;
+            DeactivateItem();
         }
+    }
+    
+    private void ActivateItem()
+    {
+        _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 1f);
+        _itemUIImage.raycastTarget = true;
+        _interactable = true;
+    }
+    
+    private void DeactivateItem()
+    {
+        _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 0.5f);
+        _itemUIImage.raycastTarget = false;
+        _interactable = false;
     }
 
     public virtual void ChangeAmount(int value)
@@ -104,6 +122,7 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (!_interactable) return;
         if (_mouseHoverTween.IsActive()) _mouseHoverTween.Kill();
        _mouseHoverTween = transform.DOScale(1.2f, 0.2f).SetUpdate(true);
+       SoundManager.Instance.PlaySoundFX(SoundFXTypes.MousePoint, out _);
     }
 
     public virtual void OnPointerExit(PointerEventData eventData)
@@ -119,6 +138,7 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 0f);
         _placeableInstance.gameObject.SetActive(true);
         _placeableInstance.SetSpriteOrder(2);
+        SoundManager.Instance.PlaySoundFX(SoundFXTypes.MouseClick, out _);
     }
     
     public virtual void OnDrag(PointerEventData eventData)
@@ -144,6 +164,7 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
         else
         {
+            SoundManager.Instance.PlaySoundFX(SoundFXTypes.MousePlaceFail, out _);
             _placeableInstance.SetSpriteOrder(1);
             _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 1f);
             _placeableInstance.gameObject.SetActive(false);

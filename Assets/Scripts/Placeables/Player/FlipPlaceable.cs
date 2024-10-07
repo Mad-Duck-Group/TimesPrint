@@ -6,18 +6,18 @@ public class FlipPlaceable : Placeable
 {
     protected override void OnTrigger(Collider2D other)
     {
-        if (other.gameObject == Player.Instance.gameObject)
+        if (other.gameObject != Player.Instance.gameObject) return;
+        SoundManager.Instance.PlaySoundFX(SoundFXTypes.HitObject, out _);
+        switch (Player.Instance.isFlipped)
         {
-            if (!Player.Instance.isFlipped)
-            {
+            case false:
                 Player.Instance.isFlipped = true;
                 Debug.Log("Flip");
-            }
-            else if (Player.Instance.isFlipped)
-            {
+                break;
+            case true:
                 Player.Instance.isFlipped = false;
                 Debug.Log("Normal");
-            }
+                break;
         }
     }
 }

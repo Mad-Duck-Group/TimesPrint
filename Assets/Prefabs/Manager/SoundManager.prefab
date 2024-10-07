@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5994518748304617878
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7266373212066546462}
+  - component: {fileID: 3150773026800619199}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7266373212066546462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5994518748304617878}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.727922, y: 2.0133338, z: 0.017871143}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3150773026800619199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5994518748304617878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 336e666d49380d94c92463c44406cb1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolSize: 10
+  masterGroup: {fileID: 24300002, guid: c9703e319fa31744ea6dd803eeb30b55, type: 2}
+  bgmGroup: {fileID: -4119838967450352376, guid: c9703e319fa31744ea6dd803eeb30b55, type: 2}
+  sfxGroup: {fileID: -3164785121519184510, guid: c9703e319fa31744ea6dd803eeb30b55, type: 2}
+  mousePointButton: {fileID: 8300000, guid: f6a73234154360544810a1cee256fa3a, type: 3}
+  mouseClickButton: {fileID: 8300000, guid: e787841dfd7500747987053a32f511dc, type: 3}
+  sceneTransition: {fileID: 8300000, guid: 1c9cc183d358250499bd0873082a3623, type: 3}
+  resetButton: {fileID: 8300000, guid: f6bb1d37110d15a48b2c3cbb68ee59b5, type: 3}
+  timeControlButton: {fileID: 8300000, guid: ed81c0e3701982346b58288b8334805b, type: 3}
+  mousePoint: {fileID: 8300000, guid: 6d37e01985a22be4881a6fe309a4dfbc, type: 3}
+  mouseClick: {fileID: 8300000, guid: 2c8a46c328c2cb246b0f146c4992b9ee, type: 3}
+  mouseDeleteObject: {fileID: 8300000, guid: 40d1305a70d7839478dcf168dfd3923e, type: 3}
+  mouseDeleteObjectItem: {fileID: 8300000, guid: d50239491653f1745906bd104e5e958c, type: 3}
+  mousePlaceObject: {fileID: 8300000, guid: 7be13d5625a20e14e99842c5d35c7d07, type: 3}
+  mousePlaceObjectItem: {fileID: 8300000, guid: be05d3e2e8cd6da43ae24187dac02a88, type: 3}
+  mousePlaceFail: {fileID: 8300000, guid: 7392e93e176747149b3334c9eae11146, type: 3}
+  start: {fileID: 8300000, guid: 02285ab06fa30b14fb26c5695e6fae17, type: 3}
+  hitObject: {fileID: 8300000, guid: 94cb6b2a20fba6f42853a3964d70be3d, type: 3}
+  coinCollect: {fileID: 8300000, guid: bb3b432e964288b448871d970d51d6a4, type: 3}
+  win: {fileID: 8300000, guid: 5bb171d8bfa28504e90965cbf400edc3, type: 3}
+  lose: {fileID: 8300000, guid: a0b11d84c0a615949ac7aa4df4ae0451, type: 3}
+  popup: {fileID: 8300000, guid: ab6363fde07eba449be5643dd04d2841, type: 3}
+  coinCheck:
+  - {fileID: 8300000, guid: bb3b432e964288b448871d970d51d6a4, type: 3}
+  - {fileID: 8300000, guid: a1986384af747464b81c507c67e85b26, type: 3}
+  - {fileID: 8300000, guid: 0388d22ae2d01784fb701adc5d0938b2, type: 3}
+  walk: {fileID: 8300000, guid: f01adb40617beb647895bd96631346a7, type: 3}
+  death: {fileID: 8300000, guid: 75fe80268fd21314cb9cf831df49ce98, type: 3}
+  mainMenuBGM: {fileID: 8300000, guid: e66b80a3739d9dd4ea7be8d66d047766, type: 3}
+  gamePlanBGM: {fileID: 8300000, guid: 3a25b51ec7bafa248bd685a856fa0976, type: 3}
+  gamePlayBGM: {fileID: 8300000, guid: dc99353b709dfff41aa0c10982a87582, type: 3}

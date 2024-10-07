@@ -4,25 +4,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PointManager : MonoBehaviour
+public class StarManager : MonoBehaviour
 {
-    private static PointManager _instance;
+    private static StarManager _instance;
     
-    public Image[] stars;  // Array สำหรับเก็บ Image ของดาวแต่ละดวง
-    public Sprite starEmpty;  // ภาพดาวเปล่า
-    public Sprite starFull;   // ภาพดาวเต็ม
+    [SerializeField] private Image[] stars;  // Array สำหรับเก็บ Image ของดาวแต่ละดวง
+    [SerializeField] private Sprite starEmpty;  // ภาพดาวเปล่า
+    [SerializeField] private Sprite starFull;   // ภาพดาวเต็ม
     [SerializeField] private GameObject[] starObj;
-    private int starInArray = 0;
-    
-    private int starsCollected = 0;  // จำนวนดาวที่เก็บได้
 
-    public static PointManager Instance
+    private int _starsCollected; // จำนวนดาวที่เก็บได้
+    
+    public int StarsCollected => _starsCollected;
+    public Sprite StarEmpty => starEmpty;
+    public Sprite StarFull => starFull;
+
+    public static StarManager Instance
     {
         get
         {
             if (_instance == null)
             {
-                Debug.LogError("PointManager is null");
+                Debug.LogError("StarManager is null");
             }
             return _instance;
         }
@@ -36,10 +39,10 @@ public class PointManager : MonoBehaviour
     // ฟังก์ชันสำหรับอัพเดตภาพดาว
     public void CollectStar()
     {
-        if (starsCollected < stars.Length)
+        if (_starsCollected < stars.Length)
         {
-            stars[starsCollected].sprite = starFull;  // เปลี่ยนภาพดาวเปล่าเป็นดาวเต็ม
-            starsCollected++;
+            stars[_starsCollected].sprite = starFull;  // เปลี่ยนภาพดาวเปล่าเป็นดาวเต็ม
+            _starsCollected++;
         }
     }
 
@@ -51,6 +54,6 @@ public class PointManager : MonoBehaviour
             starObj[i].SetActive(true);
             stars[i].sprite = starEmpty;  // เปลี่ยนกลับเป็นดาวเปล่า
         }
-        starsCollected = 0;
+        _starsCollected = 0;
     }
 }
