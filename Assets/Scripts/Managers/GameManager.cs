@@ -126,6 +126,7 @@ public class GameManager : MonoBehaviour
         _beforePlay = true;
         Time.timeScale = 0;
         PlayOrPause();
+        Player.Instance.ResetSpeed();
         restartDelegate?.Invoke();
         StarManager.Instance.ResetStars();
     }
