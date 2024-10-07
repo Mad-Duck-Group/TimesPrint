@@ -131,6 +131,7 @@ public class Player : MonoBehaviour
     
     public void ResetSpeed()
     {
+        state = UnitState.Idle;
         speed = _originalSpeed;
         isStop = false;
     }

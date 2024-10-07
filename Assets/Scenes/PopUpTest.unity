@@ -2636,6 +2636,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 385
+  boxCastDistance: 0.1
   isFlipped: 0
   isStop: 0
   countdownTime: 3
@@ -4413,7 +4417,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6433977898332393517, guid: 8799b92b0ba63c94abd8ea1fa26715f4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.77
+      value: -4.91
       objectReference: {fileID: 0}
     - target: {fileID: 6433977898332393517, guid: 8799b92b0ba63c94abd8ea1fa26715f4, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6618,11 +6622,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5729608338960422331, guid: 00b8f3d98fef2974bb0cfbb107dd35b6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.24
+      value: -5.27
       objectReference: {fileID: 0}
     - target: {fileID: 5729608338960422331, guid: 00b8f3d98fef2974bb0cfbb107dd35b6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.41
+      value: 3.1
       objectReference: {fileID: 0}
     - target: {fileID: 5729608338960422331, guid: 00b8f3d98fef2974bb0cfbb107dd35b6, type: 3}
       propertyPath: m_LocalPosition.z
