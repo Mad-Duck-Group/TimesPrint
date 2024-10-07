@@ -15,7 +15,7 @@ public enum UnitState
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] int speed = 5;
+    [SerializeField] float speed = 5;
     [SerializeField] LayerMask groundLayer; // เพิ่มการตรวจสอบพื้น
     [SerializeField] private float boxCastDistance = 0.1f;
     private Vector3 _movement;
@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float countdownTime = 3f;
     private float _countdownTimer;
+    private float _originalSpeed;
 
     private Vector2 _playerStartPosition;
     public Vector2 PlayerStartPosition => _playerStartPosition;
@@ -63,6 +64,7 @@ public class Player : MonoBehaviour
         _boxCollider = GetComponent<BoxCollider2D>();
         _instance = this;
         _playerRb = GetComponent<Rigidbody2D>();
+        _originalSpeed = speed;
     }
 
     private void Start()
@@ -122,6 +124,12 @@ public class Player : MonoBehaviour
         // เปลี่ยนสถานะเป็น Jump เมื่อกระโดด
         state = UnitState.Jump;
     }
+    
+    public void ResetSpeed()
+    {
+        speed = _originalSpeed;
+        isStop = false;
+    }
 
     private void MovementStop()
     {
@@ -131,9 +139,8 @@ public class Player : MonoBehaviour
         _countdownTimer += Time.deltaTime;
         if (_countdownTimer >= countdownTime)
         {
-            speed = 5;
+            ResetSpeed();
             _countdownTimer = 0;
-            isStop = false;
         }
 
         // เปลี่ยนสถานะเป็น Idle เมื่อหยุดเคลื่อนไหว

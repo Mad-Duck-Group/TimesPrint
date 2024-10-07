@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
         Player.Instance.transform.position = Player.Instance.PlayerStartPosition;
         Player.Instance.isFlipped = false;
         _beforePlay = true;
+        Player.Instance.ResetSpeed();
         Pause(); 
         restartDelegate?.Invoke();
         pointManager.ResetStars();
