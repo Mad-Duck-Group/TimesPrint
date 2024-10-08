@@ -1376,11 +1376,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 916642016264849134, guid: 8457814a2aed64c4e9517eefa51b22b0, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 88
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 916642016264849134, guid: 8457814a2aed64c4e9517eefa51b22b0, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 88
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 916642016264849134, guid: 8457814a2aed64c4e9517eefa51b22b0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2453,11 +2453,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 916642016264849134, guid: 5ee5578c8dceb2f47a4819e1dbb1608d, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 102
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 916642016264849134, guid: 5ee5578c8dceb2f47a4819e1dbb1608d, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 63
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 916642016264849134, guid: 5ee5578c8dceb2f47a4819e1dbb1608d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2641,11 +2641,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 916642016264849134, guid: 3bc72e24e0af69d4192330b681a7a37f, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 78
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 916642016264849134, guid: 3bc72e24e0af69d4192330b681a7a37f, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 51
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 916642016264849134, guid: 3bc72e24e0af69d4192330b681a7a37f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3932,8 +3932,8 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
+  m_ChildScaleWidth: 1
+  m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
 --- !u!1 &1198351985
 GameObject:

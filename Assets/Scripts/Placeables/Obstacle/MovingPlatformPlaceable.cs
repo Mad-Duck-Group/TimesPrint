@@ -39,7 +39,7 @@ public class MovingPlatformPlaceable : Placeable
             canPlace = CanPlaceCapsuleCollider();
             break;
       }
-      canPlace = PlaceableAreaManager.Instance.WithinBound(transform) && canPlace;
+      canPlace = PlaceableAreaManager.Instance.WithinBound(placeableCollider) && canPlace;
       spriteRenderer.color = canPlace ? Color.green : Color.red;
       Vector3[] positions = _movingPlatform.GetDrawLinePositions();
       _lineRenderer.positionCount = positions.Length;

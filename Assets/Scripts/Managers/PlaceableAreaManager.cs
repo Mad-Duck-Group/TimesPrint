@@ -60,20 +60,41 @@ public class PlaceableAreaManager : MonoBehaviour
         transform.position = new Vector3(leftBoundEdge + width / 2, bottomBoundEdge + height / 2, 0);
     }
 
-    public bool WithinBound(Transform placeableTransform)
+    public bool WithinBound(Collider2D placeableTransform)
     {
-        var placeablePosition = placeableTransform.position;
-        var placeableScale = placeableTransform.localScale;
-        Vector3 placeableTop = placeablePosition + new Vector3(0, placeableScale.y / 2, 0);
-        Vector3 placeableBottom = placeablePosition - new Vector3(0, placeableScale.y / 2, 0);
-        Vector3 placeableLeft = placeablePosition - new Vector3(placeableScale.x / 2, 0, 0);
-        Vector3 placeableRight = placeablePosition + new Vector3(placeableScale.x / 2, 0, 0);
         var areaScale = transform.localScale;
         var areaPosition = transform.position;
         Vector3 top = areaPosition + new Vector3(0, areaScale.y / 2, 0);
         Vector3 bottom = areaPosition - new Vector3(0, areaScale.y / 2, 0);
         Vector3 left = areaPosition - new Vector3(areaScale.x / 2, 0, 0);
         Vector3 right = areaPosition + new Vector3(areaScale.x / 2, 0, 0);
+        Vector3 placeableTop = Vector3.zero;
+        Vector3 placeableBottom = Vector3.zero;
+        Vector3 placeableLeft = Vector3.zero;
+        Vector3 placeableRight = Vector3.zero;
+        switch (placeableTransform)
+        {
+            case BoxCollider2D:
+            {
+                var placeablePosition = placeableTransform.bounds.center;
+                var placeableScale = placeableTransform.bounds.size;
+                placeableTop = placeablePosition + new Vector3(0, placeableScale.y / 2, 0);
+                placeableBottom = placeablePosition - new Vector3(0, placeableScale.y / 2, 0);
+                placeableLeft = placeablePosition - new Vector3(placeableScale.x / 2, 0, 0);
+                placeableRight = placeablePosition + new Vector3(placeableScale.x / 2, 0, 0);
+                break;
+            }
+            case CircleCollider2D:
+            {
+                var placeablePosition = placeableTransform.bounds.center;
+                var placeableRadius = placeableTransform.bounds.extents.x;
+                placeableTop = placeablePosition + new Vector3(0, placeableRadius, 0);
+                placeableBottom = placeablePosition - new Vector3(0, placeableRadius, 0);
+                placeableLeft = placeablePosition - new Vector3(placeableRadius, 0, 0);
+                placeableRight = placeablePosition + new Vector3(placeableRadius, 0, 0);
+                break;
+            }
+        }
         return placeableTop.y < top.y && placeableBottom.y > bottom.y &&
                placeableLeft.x > left.x && placeableRight.x < right.x;
     }

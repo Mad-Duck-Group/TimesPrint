@@ -136,7 +136,7 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
                 canPlace = CanPlaceCapsuleCollider();
                 break;
         }
-        canPlace = PlaceableAreaManager.Instance.WithinBound(transform) && canPlace;
+        canPlace = PlaceableAreaManager.Instance.WithinBound(placeableCollider) && canPlace;
         spriteRenderer.color = canPlace ? Color.green : Color.red;
         return canPlace;
     }
