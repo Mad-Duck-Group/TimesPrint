@@ -360,7 +360,7 @@ public class SoundManager : MonoBehaviour
         _masterVolume = volume;
         volume = Mathf.Log10(Mathf.Max(volume, 0.0001f)) * 20;
         masterGroup.audioMixer.SetFloat("MasterVolume", volume);
-        // if (_volumeSliderAudioSource && _volumeSliderAudioSource.isPlaying) return;
-        // PlaySoundFX(SoundFXTypes.VolumeSlider, out _volumeSliderAudioSource);
+        if (_volumeSliderAudioSource && _volumeSliderAudioSource.isPlaying) return;
+        PlaySoundFX(SoundFXTypes.MousePointButton, out _volumeSliderAudioSource);
     }
 }

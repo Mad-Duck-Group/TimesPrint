@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject pausedPanel;
     [SerializeField] private GameObject winPanel;
     [SerializeField] private Image[] stars;
+    [SerializeField] private Slider volumeSlider;
     
     public delegate void PlayOrPauseDelegate(bool isPaused, bool beforePlay);
     public PlayOrPauseDelegate playOrPauseDelegate;
@@ -101,7 +102,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        
+        volumeSlider.value = SoundManager.Instance.MasterVolume;
+        volumeSlider.gameObject.SetActive(false);
     }
 
     public void Play()
@@ -135,6 +137,8 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
         winPanel.SetActive(true);
+        int levelIndex = SceneManagerPersistent.Instance.GetLevelIndex(SceneManager.GetActiveScene().name);
+        SaveManager.SaveStars(levelIndex, StarManager.Instance.StarsCollected);
         StartCoroutine(ShowStar());
     }
 
@@ -201,6 +205,16 @@ public class GameManager : MonoBehaviour
     {
         if (_bgmAudioSource) SoundManager.Instance.StopSound(_bgmAudioSource);
         SceneManagerPersistent.Instance.LoadNextScene(SceneTypes.MainMenu, LoadSceneMode.Single, false);
+    }
+
+    public void ToggleVolumeSlider()
+    {
+        volumeSlider.gameObject.SetActive(!volumeSlider.gameObject.activeSelf);
+    }
+    
+    public void ChangeVolume()
+    {
+        SoundManager.Instance.ChangeMixerVolume(volumeSlider.value);
     }
 
     public void AddPlaceable(Placeable placeable)

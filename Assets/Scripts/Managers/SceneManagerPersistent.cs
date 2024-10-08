@@ -84,6 +84,8 @@ public class SceneManagerPersistent : MonoBehaviour
 
     public string NextScene { get; private set; }
     public LoadSceneMode LoadSceneMode { get; private set; }
+    
+    public int LevelCount => levels.Length;
 
     private void Awake()
     {
@@ -135,6 +137,18 @@ public class SceneManagerPersistent : MonoBehaviour
         {
             StartCoroutine(LoadSceneAsync());
         }
+    }
+
+    public int GetLevelIndex(string levelName)
+    {
+        for (int i = 0; i < levels.Length; i++)
+        {
+            if (levels[i].SceneName == levelName)
+            {
+                return i;
+            }
+        }
+        return 0;
     }
     
     private IEnumerator LoadSceneAsync()
