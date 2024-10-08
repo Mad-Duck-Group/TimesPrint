@@ -181,7 +181,7 @@ MonoBehaviour:
   isFlipped: 0
   isStop: 0
   isDead: 0
-  countdownTime: 4
+  countdownTime: 3
   state: 0
 --- !u!95 &2711611247569258975
 Animator:
