@@ -37,6 +37,7 @@ public class MovingPlatform : MonoBehaviour
     
     private bool _initialized;
     private bool _isMoving;
+    private BoxCollider2D _boxCollider2D;
     private Vector3 _startingPosition;
     private Vector3 _direction;
     private Vector3 _offset;
@@ -59,18 +60,15 @@ public class MovingPlatform : MonoBehaviour
         GameManager.Instance.restartDelegate -= Restart;
     }
 
+    private void Awake()
+    {
+        _boxCollider2D = GetComponent<BoxCollider2D>();
+    }
+
     private void PlayOrPause(bool isPaused, bool beforePlay)
     {
-        switch (isPaused)
-        {
-            case false when !_initialized:
-                Initialize();
-                break;
-            case false:
-                RecheckDirection();
-                break;
-        }
-
+        if (!isPaused && !_initialized)
+            Initialize();
         _isMoving = !isPaused;
     }
 
@@ -80,16 +78,16 @@ public class MovingPlatform : MonoBehaviour
         if (_changeDirectionCoroutine != null)
             StopCoroutine(_changeDirectionCoroutine);
         _changeDirectionCoroutine = null;
-        _changeDirectionPosition = transform.position - (_direction * distance);
+        _changeDirectionPosition = _boxCollider2D.bounds.center - (_direction * distance);
         GenerateBoxCastData();
     }
 
     private void Initialize()
     {
         _initialized = true;
-        _startingPosition = transform.position;
+        _startingPosition = _boxCollider2D.bounds.center;
         GetStartingDirection();
-        _changeDirectionPosition = transform.position - (_direction * distance);
+        _changeDirectionPosition = _boxCollider2D.bounds.center - (_direction * distance);
     }
     
     public void ReverseDirection()
@@ -109,11 +107,13 @@ public class MovingPlatform : MonoBehaviour
                 startingDirection = MovingPlatformStartingDirection.Up;
                 break;
         }
+        RecheckDirection();
     }
 
     private void Restart()
     {
-        transform.position = _startingPosition;
+        Vector3 relativePosition = transform.position - _boxCollider2D.bounds.center;
+        transform.position = _startingPosition + relativePosition;
         RecheckDirection();
     }
     
@@ -152,28 +152,29 @@ public class MovingPlatform : MonoBehaviour
         bool passedThreshold;
         if (_direction == Vector3.right)
         {
-            passedThreshold = Vector3.Distance(transform.position, _changeDirectionPosition) >= 0.1f &&
-                              transform.position.x > _changeDirectionPosition.x;
+            passedThreshold = Vector3.Distance(_boxCollider2D.bounds.center, _changeDirectionPosition) >= 0.1f &&
+                              _boxCollider2D.bounds.center.x > _changeDirectionPosition.x;
 
         }
         else if (_direction == Vector3.up)
         {
-            passedThreshold = Vector3.Distance(transform.position, _changeDirectionPosition) >= 0.1f &&
-                              transform.position.y > _changeDirectionPosition.y;
+            passedThreshold = Vector3.Distance(_boxCollider2D.bounds.center, _changeDirectionPosition) >= 0.1f &&
+                              _boxCollider2D.bounds.center.y > _changeDirectionPosition.y;
         }
         else if (_direction == Vector3.left)
         {
-            passedThreshold = Vector3.Distance(transform.position, _changeDirectionPosition) >= 0.1f &&
-                              transform.position.x < _changeDirectionPosition.x;
+            passedThreshold = Vector3.Distance(_boxCollider2D.bounds.center, _changeDirectionPosition) >= 0.1f &&
+                              _boxCollider2D.bounds.center.x < _changeDirectionPosition.x;
         }
         else
         {
-            passedThreshold = Vector3.Distance(transform.position, _changeDirectionPosition) >= 0.1f &&
-                              transform.position.y < _changeDirectionPosition.y;
+            passedThreshold = Vector3.Distance(_boxCollider2D.bounds.center, _changeDirectionPosition) >= 0.1f &&
+                              _boxCollider2D.bounds.center.y < _changeDirectionPosition.y;
         }
-        if (Vector3.Distance(_startingPosition, transform.position) < distance || !passedThreshold) return;
+        if (Vector3.Distance(_startingPosition, _boxCollider2D.bounds.center) < distance || !passedThreshold) return;
         _changeDirectionPosition = _startingPosition + (_direction * distance);
-        transform.position = _changeDirectionPosition;
+        Vector3 relativePosition = transform.position - _boxCollider2D.bounds.center;
+        transform.position = _changeDirectionPosition + relativePosition;
         _changeDirectionCoroutine = StartCoroutine(ChangeDirection());
     }
 
@@ -181,13 +182,13 @@ public class MovingPlatform : MonoBehaviour
     {
         if (_direction == Vector3.left || _direction == Vector3.right)
         {
-            _offset = ((transform.localScale.x * 0.5f) + (boxCastCheckLength / 2)) * _direction;
-            _boxCastSize = new Vector3(boxCastCheckLength, transform.localScale.y, 0);
+            _offset = ((_boxCollider2D.bounds.size.x * 0.5f) + (boxCastCheckLength / 2)) * _direction;
+            _boxCastSize = new Vector3(boxCastCheckLength, _boxCollider2D.bounds.size.y, 0);
         }
         else
         {
-            _offset = ((transform.localScale.y * 0.5f) + (boxCastCheckLength / 2)) * _direction;
-            _boxCastSize = new Vector3(transform.localScale.x, boxCastCheckLength, 0);
+            _offset = ((_boxCollider2D.bounds.size.y * 0.5f) + (boxCastCheckLength / 2)) * _direction;
+            _boxCastSize = new Vector3(_boxCollider2D.bounds.size.x, boxCastCheckLength, 0);
         }
     }
     
@@ -202,7 +203,7 @@ public class MovingPlatform : MonoBehaviour
     {
         if (!_isMoving) return;
         GenerateBoxCastData();
-        Vector3 startingPosition = transform.position + _offset;
+        Vector3 startingPosition = _boxCollider2D.bounds.center + _offset;
         ContactFilter2D contactFilter2D = new ContactFilter2D
         {
             useLayerMask = true
@@ -216,44 +217,46 @@ public class MovingPlatform : MonoBehaviour
             case 1 when colliders[0].gameObject == gameObject:
                 return;
         }
-        _changeDirectionPosition = transform.position;
+        _changeDirectionPosition = _boxCollider2D.bounds.center;
         if (_changeDirectionCoroutine != null) return;
         _changeDirectionCoroutine = StartCoroutine(ChangeDirection());
     }
 
     private void OnDrawGizmosSelected()
     {
+        if (!_boxCollider2D) _boxCollider2D = GetComponent<BoxCollider2D>();
         Gizmos.color = Color.red;
         if (!Application.isPlaying)
         {
             GetStartingDirection();
             GenerateBoxCastData();
-            _startingPosition = transform.position;
+            _startingPosition = _boxCollider2D.bounds.center;
         }
         if (fixedDistance)
         {
             Vector3[] positions = GetDrawLinePositions();
             Gizmos.DrawLine(positions[0], positions[1]);
         }
-        Gizmos.DrawWireCube(transform.position + _offset, _boxCastSize);
+        Gizmos.DrawWireCube(_boxCollider2D.bounds.center + _offset, _boxCastSize);
     }
     
     public Vector3[] GetDrawLinePositions()
     {
         if (!_initialized)
         {
-            _startingPosition = transform.position;
+            if (!_boxCollider2D) _boxCollider2D = GetComponent<BoxCollider2D>();
+            _startingPosition = _boxCollider2D.bounds.center;
             GetStartingDirection();
         }
         Vector3[] positions = new Vector3[2];
         float sizeOffset;
         if (_direction == Vector3.left || _direction == Vector3.right)
         {
-            sizeOffset = transform.localScale.x / 2;
+            sizeOffset = _boxCollider2D.bounds.size.x / 2;
         }
         else
         {
-            sizeOffset = transform.localScale.y / 2;
+            sizeOffset = _boxCollider2D.bounds.size.y / 2;
         }
         positions[0] = _startingPosition - (_direction * (distance + sizeOffset));
         positions[1] = _startingPosition + (_direction * (distance + sizeOffset));

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -27,10 +28,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Button restartButton;
     [SerializeField] private Button clearButton;
     [SerializeField] private Button pausePanelButton;
+    [SerializeField] private Button nextLevelButton;
     [SerializeField] private GameObject pausedPanel;
     [SerializeField] private GameObject winPanel;
     [SerializeField] private Image[] stars;
     [SerializeField] private Slider volumeSlider;
+    [SerializeField] private TMP_Text timerHeader;
+    [SerializeField] private TMP_Text timerWin;
     
     public delegate void PlayOrPauseDelegate(bool isPaused, bool beforePlay);
     public PlayOrPauseDelegate playOrPauseDelegate;
@@ -41,6 +45,7 @@ public class GameManager : MonoBehaviour
     public delegate void FinishLoadingDelegate();
     public FinishLoadingDelegate finishLoadingDelegate;
 
+    private float _gameTime;
     private bool _finishLoading;
     private bool _isPaused;
     private bool _beforePlay = true;
@@ -106,6 +111,24 @@ public class GameManager : MonoBehaviour
         volumeSlider.gameObject.SetActive(false);
     }
 
+    private void Update()
+    {
+        UpdateTimer();
+    }
+
+    private string FormatTime(float seconds)
+    {
+        TimeSpan time = TimeSpan.FromSeconds(seconds);
+        return time.ToString("mm':'ss");
+    }
+
+    private void UpdateTimer()
+    {
+        if (!_finishLoading || winPanel.activeSelf || pausedPanel.activeSelf) return;
+        _gameTime += Time.unscaledDeltaTime;
+        timerHeader.text = FormatTime(_gameTime);
+    }
+
     public void Play()
     {
         SoundManager.Instance.PlaySoundFX(SoundFXTypes.TimeControlButton, out _);
@@ -137,7 +160,10 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
         winPanel.SetActive(true);
+        timerWin.text = FormatTime(_gameTime);
         int levelIndex = SceneManagerPersistent.Instance.GetLevelIndex(SceneManager.GetActiveScene().name);
+        bool canGoNext = levelIndex + 1 < SceneManagerPersistent.Instance.LevelCount;
+        nextLevelButton.gameObject.SetActive(canGoNext);
         SaveManager.SaveStars(levelIndex, StarManager.Instance.StarsCollected);
         StartCoroutine(ShowStar());
     }
@@ -158,6 +184,16 @@ public class GameManager : MonoBehaviour
     {
         if (_bgmAudioSource) SoundManager.Instance.StopSound(_bgmAudioSource);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void NextLevel()
+    {
+        int levelIndex = SceneManagerPersistent.Instance.GetLevelIndex(SceneManager.GetActiveScene().name);
+        if (levelIndex + 1 < SceneManagerPersistent.Instance.LevelCount)
+        {
+            if (_bgmAudioSource) SoundManager.Instance.StopSound(_bgmAudioSource);
+            SceneManagerPersistent.Instance.LoadNextScene(SceneTypes.Level, LoadSceneMode.Additive, true, levelIndex + 1);
+        }
     }
     
     private void PlayOrPause()

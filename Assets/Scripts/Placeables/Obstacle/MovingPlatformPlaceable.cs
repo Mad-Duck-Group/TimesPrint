@@ -14,6 +14,9 @@ public class MovingPlatformPlaceable : Placeable
    {
       _movingPlatform = GetComponent<MovingPlatform>();
       _lineRenderer = GetComponent<LineRenderer>();
+      Vector3[] positions = _movingPlatform.GetDrawLinePositions();
+      _lineRenderer.positionCount = positions.Length;
+      _lineRenderer.SetPositions(positions);
    }
    
    protected override void PlayOrPause(bool isPaused, bool beforePlay)

@@ -25,16 +25,16 @@ public class PlaceableAreaManager : MonoBehaviour
     [SerializeField] private bool adjustByBounds = true;
 
     [SerializeField] [ShowIf(nameof(adjustByBounds))]
-    private Transform leftBound;
+    private BoxCollider2D leftBound;
 
     [SerializeField] [ShowIf(nameof(adjustByBounds))]
-    private Transform rightBound;
+    private BoxCollider2D rightBound;
 
     [SerializeField] [ShowIf(nameof(adjustByBounds))]
-    private Transform topBound;
+    private BoxCollider2D topBound;
 
     [SerializeField] [ShowIf(nameof(adjustByBounds))]
-    private Transform bottomBound;
+    private BoxCollider2D bottomBound;
 
     private void Awake()
     {
@@ -50,11 +50,11 @@ public class PlaceableAreaManager : MonoBehaviour
     private void AdjustSize()
     {
         if (!adjustByBounds) return;
-        float leftBoundEdge = leftBound.position.x + leftBound.localScale.x / 2;
-        float rightBoundEdge = rightBound.position.x - rightBound.localScale.x / 2;
+        float leftBoundEdge = leftBound.bounds.center.x + leftBound.bounds.size.x / 2;
+        float rightBoundEdge = rightBound.bounds.center.x - rightBound.bounds.size.x / 2;
         float width = rightBoundEdge - leftBoundEdge;
-        float topBoundEdge = topBound.position.y - topBound.localScale.y / 2;
-        float bottomBoundEdge = bottomBound.position.y + bottomBound.localScale.y / 2;
+        float topBoundEdge = topBound.bounds.center.y - topBound.bounds.size.y / 2;
+        float bottomBoundEdge = bottomBound.bounds.center.y + bottomBound.bounds.size.y / 2;
         float height = topBoundEdge - bottomBoundEdge;
         transform.localScale = new Vector3(width, height, 1);
         transform.position = new Vector3(leftBoundEdge + width / 2, bottomBoundEdge + height / 2, 0);

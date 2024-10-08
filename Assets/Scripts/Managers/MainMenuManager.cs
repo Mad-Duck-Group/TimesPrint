@@ -47,8 +47,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void PlayGame()
     {
-        if (_bgmAudioSource) SoundManager.Instance.StopSound(_bgmAudioSource);
-        SceneManagerPersistent.Instance.LoadNextScene(SceneTypes.LevelSelect, LoadSceneMode.Single, false);
+        SceneManagerPersistent.Instance.BGM = _bgmAudioSource;
+        SceneManagerPersistent.Instance.LoadNextScene(SceneTypes.LevelSelect, LoadSceneMode.Single, false, stopBGM: false);
     }
     
     public void QuitGame()

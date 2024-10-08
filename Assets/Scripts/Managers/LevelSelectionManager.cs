@@ -42,7 +42,7 @@ public class LevelSelectionManager : MonoBehaviour
             var index = i;
             button.Button.onClick.AddListener(() =>
             {
-                SceneManagerPersistent.Instance.LoadNextScene(SceneTypes.Level, LoadSceneMode.Additive, true, index);
+                SceneManagerPersistent.Instance.LoadNextScene(SceneTypes.Level, LoadSceneMode.Additive, true, index, true);
             });
             button.SetStars(i);
         }

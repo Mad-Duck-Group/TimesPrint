@@ -14,7 +14,8 @@ public enum PlaceableTypes
     PlayerStop,
     PlatformStop,
     PlatformSpeed,
-    PlatformReverse
+    PlatformReverse,
+    PlatformSlow
 }
 public abstract class Placeable : MonoBehaviour, IPointerClickHandler
 {
@@ -40,7 +41,7 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
     private void CheckIfObjectItem()
     {
         _isObjectItem = placeableType is PlaceableTypes.PlatformStop or PlaceableTypes.PlatformSpeed
-            or PlaceableTypes.PlatformReverse;
+            or PlaceableTypes.PlatformReverse or PlaceableTypes.PlatformSlow;
     }
     
     private void OnEnable()
@@ -248,7 +249,7 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
     {
         if (!GameManager.Instance.BeforePlay) return;
         if (eventData.button != PointerEventData.InputButton.Right) return;
-        if (_placeByPlayer)
+        if (_placeByPlayer || (!_placeByPlayer && objectItem))
         {
             RemoveFromClick();
         }

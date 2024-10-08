@@ -85,6 +85,7 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     
     private void ActivateItem()
     {
+        if (amount <= 0) return;
         _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 1f);
         _itemUIImage.raycastTarget = true;
         _interactable = true;

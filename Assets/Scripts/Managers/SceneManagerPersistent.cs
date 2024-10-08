@@ -83,6 +83,7 @@ public class SceneManagerPersistent : MonoBehaviour
     private AsyncOperation _asyncOperation;
 
     public string NextScene { get; private set; }
+    public AudioSource BGM { get; set; }
     public LoadSceneMode LoadSceneMode { get; private set; }
     
     public int LevelCount => levels.Length;
@@ -107,9 +108,13 @@ public class SceneManagerPersistent : MonoBehaviour
         }
     }
     
-    public void LoadNextScene(SceneTypes sceneType, LoadSceneMode loadSceneMode, bool useLoadingScene, int index = 0)
+    public void LoadNextScene(SceneTypes sceneType, LoadSceneMode loadSceneMode, bool useLoadingScene, int index = 0, bool stopBGM = true)
     {
         if (_asyncOperation != null && !_asyncOperation.isDone) return;
+        if (BGM && stopBGM)
+        {
+            SoundManager.Instance.StopSound(BGM);
+        }
         string sceneName;
         switch (sceneType)
         {
