@@ -18,6 +18,7 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private Vector3 _startPlaceablePosition;
     private bool _canPlace;
     private bool _interactable;
+    private bool _dragging;
     
     public PlaceableTypes PlaceableType => itemPrefab.PlaceableType;
     private Vector3 MousePositionInWorld
@@ -120,6 +121,7 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
         if (!_interactable) return;
+        if (_dragging) return;
         if (_mouseHoverTween.IsActive()) _mouseHoverTween.Kill();
        _mouseHoverTween = transform.DOScale(1.2f, 0.2f).SetUpdate(true);
        SoundManager.Instance.PlaySoundFX(SoundFXTypes.MousePoint, out _);
@@ -135,6 +137,7 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public virtual void OnBeginDrag(PointerEventData eventData)
     {
         if (!_interactable) return;
+        _dragging = true;
         _itemUIImage.color = new Color(_itemUIImage.color.r, _itemUIImage.color.g, _itemUIImage.color.b, 0f);
         _placeableInstance.gameObject.SetActive(true);
         _placeableInstance.SetSpriteOrder(2);
@@ -171,5 +174,6 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             _placeableInstance.gameObject.transform.position = _startPlaceablePosition;
             _canPlace = false;
         }
+        _dragging = false;
     }
 }

@@ -167,6 +167,7 @@ public class GameManager : MonoBehaviour
             pauseButton.interactable = false;
             playButton.interactable = true;
             restartButton.interactable = !_beforePlay;
+            clearButton.interactable = _beforePlay;
             _isPaused = true;
         }
         else
@@ -174,6 +175,7 @@ public class GameManager : MonoBehaviour
             pauseButton.interactable = true;
             playButton.interactable = false;
             restartButton.interactable = true;
+            clearButton.interactable = false;
             _isPaused = false;
             _beforePlay = false;
         }
