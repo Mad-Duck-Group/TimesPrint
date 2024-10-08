@@ -101,7 +101,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip gamePlayBGM;
     
     private List<AudioSource> _audioSources = new List<AudioSource>();
-    private float _masterVolume = 1f;
+    private float _masterVolume = 0.5f;
     private AudioSource _volumeSliderAudioSource;
     
     public float MasterVolume => _masterVolume;

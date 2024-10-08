@@ -11,7 +11,7 @@ public class HowToPlay : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Image htpImages;
     [SerializeField] private Sprite[] htpSprites;
     [SerializeField] private GameObject htpPanel;
-    private int currentIndex = 0;
+    private int _currentIndex = 0;
 
     private void Awake()
     {
@@ -37,18 +37,21 @@ public class HowToPlay : MonoBehaviour, IPointerClickHandler
     {
         if (htpSprites.Length == 0) return;
 
-        currentIndex++;
+        _currentIndex++;
 
         // เช็คว่าถึงรูปสุดท้ายแล้วหรือยัง
-        if (currentIndex >= htpSprites.Length)
+        if (_currentIndex >= htpSprites.Length)
         {
+            _currentIndex = 0;
+            htpImages.sprite = htpSprites[0];
             // ถ้าคลิกถัดไปหลังจากรูปสุดท้าย ให้ซ่อนรูปภาพ
             htpPanel.SetActive(false); // ซ่อนรูป
+            
         }
         else
         {
             // ถ้ายังไม่ถึงรูปสุดท้าย ให้แสดงรูปถัดไป
-            htpImages.sprite = htpSprites[currentIndex];
+            htpImages.sprite = htpSprites[_currentIndex];
         }
     }
 
@@ -57,16 +60,16 @@ public class HowToPlay : MonoBehaviour, IPointerClickHandler
     {
         if (htpSprites.Length == 0) return;
 
-        currentIndex--;
+        _currentIndex--;
 
         // เช็คว่าถอยหลังจนถึงจุดเริ่มต้นแล้วหรือยัง
-        if (currentIndex < 0)
+        if (_currentIndex < 0)
         {
-            currentIndex = 0;  // ป้องกันไม่ให้ถอยเกินรูปแรก
+            _currentIndex = 0;  // ป้องกันไม่ให้ถอยเกินรูปแรก
         }
         else
         {
-            htpImages.sprite = htpSprites[currentIndex];  // เปลี่ยนรูปใน Image
+            htpImages.sprite = htpSprites[_currentIndex];  // เปลี่ยนรูปใน Image
             htpImages.enabled = true;  // ถ้ารูปถูกซ่อนไว้ให้แสดงรูปใหม่เมื่อคลิกย้อนกลับ
         }
     }

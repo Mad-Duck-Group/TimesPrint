@@ -20,11 +20,13 @@ public class MainMenuManager : MonoBehaviour
     }
     
     [SerializeField] private Slider volumeSlider;
+    [SerializeField] private HowToPlay howToPlay;
     private AudioSource _bgmAudioSource;
     
     private void Awake()
     {
         _instance = this;
+        howToPlay.gameObject.SetActive(false);
         volumeSlider.value = SoundManager.Instance.MasterVolume;
         volumeSlider.gameObject.SetActive(false);
     }
@@ -43,6 +45,11 @@ public class MainMenuManager : MonoBehaviour
     public void ChangeVolume()
     {
         SoundManager.Instance.ChangeMixerVolume(volumeSlider.value);
+    }
+    
+    public void ShowHowToPlay()
+    {
+        howToPlay.gameObject.SetActive(true);
     }
 
     public void PlayGame()
