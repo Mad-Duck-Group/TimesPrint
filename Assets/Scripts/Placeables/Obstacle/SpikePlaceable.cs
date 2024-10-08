@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class SpikePlaceable : Placeable
 {
+    [SerializeField] private bool isWall;
     protected override void OnCollision(Collision2D other)
     {
         if (other.gameObject == Player.Instance.gameObject)
         {
-            GameManager.Instance.Restart();
+            Player.Instance.Dead(isWall);
         }
     }
 }

@@ -55,6 +55,7 @@ public class ButtonMouseHandler : MonoBehaviour, IPointerEnterHandler, IPointerC
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (eventData.button is not PointerEventData.InputButton.Left) return;
         if (!_button.interactable) return;
         if (playClickSound)
             SoundManager.Instance.PlaySoundFX(SoundFXTypes.MouseClickButton, out _);

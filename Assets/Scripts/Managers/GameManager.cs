@@ -96,6 +96,7 @@ public class GameManager : MonoBehaviour
     {
         _instance = this;
         Time.timeScale = 0;
+        timerHeader.text = FormatTime(_gameTime);
         pausedPanel.SetActive(false);
         winPanel.SetActive(false);
         playButton.interactable = false;
@@ -108,7 +109,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         volumeSlider.value = SoundManager.Instance.MasterVolume;
-        volumeSlider.gameObject.SetActive(false);
+        //volumeSlider.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -143,17 +144,16 @@ public class GameManager : MonoBehaviour
         PlayOrPause();
     }
     
+    
     public void Restart()
     {
-        SoundManager.Instance.PlaySoundFX(SoundFXTypes.TimeControlButton, out _);
         Player.Instance.transform.position = Player.Instance.PlayerStartPosition;
         Player.Instance.isFlipped = false;
         _beforePlay = true;
         Time.timeScale = 0;
-        PlayOrPause();
-        Player.Instance.ResetSpeed();
         restartDelegate?.Invoke();
         StarManager.Instance.ResetStars();
+        PlayOrPause();
     }
 
     public void Win()

@@ -177,8 +177,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 385
   boxCastDistance: 0.1
+  isWalking: 0
   isFlipped: 0
   isStop: 0
+  isDead: 0
   countdownTime: 4
   state: 0
 --- !u!95 &2711611247569258975
@@ -193,7 +195,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 98acf2a9e3f3d024e921186eb24fd48d, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
