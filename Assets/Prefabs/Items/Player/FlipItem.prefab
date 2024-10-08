@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 44695299717297761}
   - component: {fileID: 3368599435840275737}
   - component: {fileID: 475560597766041088}
+  - component: {fileID: 4183655569945894266}
   m_Layer: 5
   m_Name: FlipItem
   m_TagString: Untagged
@@ -67,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: fb699254f5122bf47b6e339ff4f7887a, type: 3}
+  m_Sprite: {fileID: 2104477780, guid: 1b9a2174d0b02a14fb576d4f3d98a6ff, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -92,6 +93,27 @@ MonoBehaviour:
   amount: 2
   itemPrefab: {fileID: 5802580185984657372, guid: 139ca81335ceabd40bc51b39f22bf5b7, type: 3}
   amountText: {fileID: 1615339066599582442}
+--- !u!95 &4183655569945894266
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5124042707972719426}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 76acb7c450d13d24bb764154ef75f8e5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6791411191988667670
 GameObject:
   m_ObjectHideFlags: 0

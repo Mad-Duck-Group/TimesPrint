@@ -12,6 +12,9 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     [SerializeField] private int amount = 2;
     [SerializeField] private Placeable itemPrefab;
     [SerializeField] private TMP_Text amountText;
+
+    private bool _hovering;
+    private Animator _animator;
     private Image _itemUIImage;
     private Tween _mouseHoverTween;
     private Placeable _placeableInstance;
@@ -19,7 +22,8 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private bool _canPlace;
     private bool _interactable;
     private bool _dragging;
-    
+    private static readonly int Hovering = Animator.StringToHash("Hovering");
+
     public PlaceableTypes PlaceableType => itemPrefab.PlaceableType;
     private Vector3 MousePositionInWorld
     {
@@ -47,6 +51,7 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private void Awake()
     {
         _itemUIImage = GetComponent<Image>();
+        _animator = GetComponent<Animator>();
         amountText.text = $"x{amount}";
         DeactivateItem();
     }
@@ -54,6 +59,16 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     void Start()
     {
         
+    }
+
+    private void Update()
+    {
+        UpdateAnimator();
+    }
+
+    protected virtual void UpdateAnimator()
+    {
+        _animator.SetBool(Hovering, _hovering);
     }
 
     private void Initialize()
@@ -123,6 +138,7 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         if (!_interactable) return;
         if (_dragging) return;
+        _hovering = true;
         if (_mouseHoverTween.IsActive()) _mouseHoverTween.Kill();
        _mouseHoverTween = transform.DOScale(1.2f, 0.2f).SetUpdate(true);
        SoundManager.Instance.PlaySoundFX(SoundFXTypes.MousePoint, out _);
@@ -131,6 +147,7 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public virtual void OnPointerExit(PointerEventData eventData)
     {
         if (!_interactable) return;
+        _hovering = false;
         if (_mouseHoverTween.IsActive()) _mouseHoverTween.Kill();
         _mouseHoverTween = transform.DOScale(1f, 0.2f).SetUpdate(true);
     }
@@ -176,5 +193,6 @@ public abstract class Item : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             _canPlace = false;
         }
         _dragging = false;
+        _hovering = false;
     }
 }
