@@ -27,13 +27,13 @@ public class MainMenuManager : MonoBehaviour
     {
         _instance = this;
         howToPlay.gameObject.SetActive(false);
-        volumeSlider.value = SoundManager.Instance.MasterVolume;
-        volumeSlider.gameObject.SetActive(false);
     }
     
     // Start is called before the first frame update
     void Start()
     {
+        volumeSlider.value = SoundManager.Instance.MasterVolume;
+        volumeSlider.gameObject.SetActive(false);
         SoundManager.Instance.PlayBGM(BGMTypes.MainMenu, out _bgmAudioSource);
     }
     
@@ -61,9 +61,12 @@ public class MainMenuManager : MonoBehaviour
     public void QuitGame()
     {
         if (_bgmAudioSource) SoundManager.Instance.StopSound(_bgmAudioSource);
-        #if UNITY_EDITOR
+#if (UNITY_EDITOR)
         UnityEditor.EditorApplication.isPlaying = false;
-        #endif
-        Application.Quit();
+#elif (UNITY_STANDALONE) 
+    Application.Quit();
+#elif (UNITY_WEBGL)
+    Application.OpenURL("https://madduckteam.itch.io");
+#endif
     }
 }

@@ -35,7 +35,7 @@ public class LoadingSceneManager : MonoBehaviour
         _asyncOperation.allowSceneActivation = false;
         while (_asyncOperation.progress < 0.9f)
         {
-            
+            yield return null;
         }
         _asyncOperation.allowSceneActivation = true;
         SoundManager.Instance.PlaySoundFX(SoundFXTypes.SceneTransition, out _);

@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
         finishLoadingDelegate?.Invoke();
         clearButton.interactable = true;
         pausePanelButton.interactable = true;
-        PlayOrPause();
+        Restart();
     }
 
     private void Awake()
