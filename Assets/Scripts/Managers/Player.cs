@@ -68,6 +68,7 @@ public class Player : MonoBehaviour
     {
         GameManager.Instance.playOrPauseDelegate += PlayOrPause;
         GameManager.Instance.restartDelegate += Restart;
+        GameManager.Instance.winDelegate += Win;
     }
     
     private void OnDisable()
@@ -75,6 +76,12 @@ public class Player : MonoBehaviour
         if (!GameManager.Instance) return;
         GameManager.Instance.playOrPauseDelegate -= PlayOrPause;
         GameManager.Instance.restartDelegate -= Restart;
+        GameManager.Instance.winDelegate -= Win;
+    }
+    
+    private void Win()
+    {
+        isWalking = false;
     }
 
     private void PlayOrPause(bool ispaused, bool beforeplay)
@@ -85,6 +92,7 @@ public class Player : MonoBehaviour
     private void Restart()
     {
         if (_deadCoroutine != null) StopCoroutine(_deadCoroutine);
+        _spriteRenderer.flipX = false;
         isDead = false;
         _deadCoroutine = null;
     }
@@ -170,6 +178,7 @@ public class Player : MonoBehaviour
         if (_deadCoroutine != null) return;
         _anim.SetTrigger(wall ? Player_Dead_Wall : Player_Dead);
         isDead = true;
+        state = UnitState.Move;
         SoundManager.Instance.PlayPlayerFX(PlayerFXTypes.Death, out _);
         isWalking = false;
         _deadCoroutine = StartCoroutine(DeadCoroutine());
@@ -177,16 +186,22 @@ public class Player : MonoBehaviour
     
     private IEnumerator DeadCoroutine()
     {
+        yield return null;
+        while (_anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
+        {
+            yield return null;
+        }
         yield return new WaitForSecondsRealtime(1f);
         GameManager.Instance.Restart();
         ResetSpeed();
+        _spriteRenderer.flipX = false;
         isDead = false;
         _deadCoroutine = null;
     }
     
-    public void ResetSpeed()
+    public void ResetSpeed(bool walk = false)
     {
-        isWalking = false;
+        isWalking = walk;
         state = UnitState.Idle;
         speed = _originalSpeed;
         isStop = false;
@@ -200,12 +215,12 @@ public class Player : MonoBehaviour
         _countdownTimer += Time.deltaTime;
         if (_countdownTimer >= countdownTime)
         {
-            ResetSpeed();
+            ResetSpeed(true);
             _countdownTimer = 0;
         }
         
         // เปลี่ยนสถานะเป็น Idle เมื่อหยุดเคลื่อนที่
-        state = UnitState.Idle;
+        if (!isDead) state = UnitState.Idle;
     }
     
     private bool IsGrounded()
@@ -254,7 +269,7 @@ public class Player : MonoBehaviour
             }
 
             // เมื่อถึงพื้นให้กลับไปเป็นสถานะ Move หรือ Idle
-            if (IsGrounded())
+            if (IsGrounded() && !isDead)
             {
                 state = isWalking ? UnitState.Move : UnitState.Idle; // เมื่อแตะพื้น กลับไปอนิเมชันเดิน
             }

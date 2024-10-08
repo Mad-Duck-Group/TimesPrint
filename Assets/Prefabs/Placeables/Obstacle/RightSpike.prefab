@@ -151,3 +151,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   objectItem: {fileID: 0}
+  isWall: 1

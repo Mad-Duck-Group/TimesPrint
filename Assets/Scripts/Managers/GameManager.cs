@@ -44,6 +44,9 @@ public class GameManager : MonoBehaviour
     
     public delegate void FinishLoadingDelegate();
     public FinishLoadingDelegate finishLoadingDelegate;
+    
+    public delegate void WinDelegate();
+    public WinDelegate winDelegate;
 
     private float _gameTime;
     private bool _finishLoading;
@@ -158,7 +161,8 @@ public class GameManager : MonoBehaviour
 
     public void Win()
     {
-        Time.timeScale = 0;
+        winDelegate?.Invoke();
+        //Time.timeScale = 0;
         winPanel.SetActive(true);
         timerWin.text = FormatTime(_gameTime);
         int levelIndex = SceneManagerPersistent.Instance.GetLevelIndex(SceneManager.GetActiveScene().name);
