@@ -58,6 +58,7 @@ public class HowToPlay : MonoBehaviour, IPointerClickHandler
             _currentIndex = 0;
             htpImages.sprite = htpSprites[0];
             ToggleClickImage();
+            SaveManager.ReadHowToPlay = true;
             // ถ้าคลิกถัดไปหลังจากรูปสุดท้าย ให้ซ่อนรูปภาพ
             htpPanel.SetActive(false); // ซ่อนรูป
             

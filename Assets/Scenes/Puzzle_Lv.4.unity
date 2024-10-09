@@ -3417,6 +3417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 738f998739448d940a3498d33b4a03c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  howToPlay: {fileID: 5163558708988648066, guid: a17497d11c23fb445b2ed191a9dd9a38, type: 3}
   pauseButton: {fileID: 981618659}
   playButton: {fileID: 1418469987}
   restartButton: {fileID: 894511703}
@@ -5403,6 +5404,7 @@ GameObject:
   - component: {fileID: 1733051852}
   - component: {fileID: 1733051856}
   - component: {fileID: 1733051857}
+  - component: {fileID: 1733051858}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -5544,6 +5546,19 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 481
   m_MaxRayIntersections: 0
+--- !u!114 &1733051858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733051851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 473f30757c3024b4da7cdc8d11d3bfb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aspectRatio: {x: 16, y: 9}
 --- !u!1 &1739842377
 GameObject:
   m_ObjectHideFlags: 0

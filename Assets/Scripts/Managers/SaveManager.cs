@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 
-public static class SaveManager
+public class SaveManager : MonoBehaviour
 {
     private const string LevelKeyFormat = "Level_{0}_Stars";
-    
+    public static bool ReadHowToPlay { get; set; } = false;
+
     public static void SaveStars(int levelIndex, int starCount)
     {
         int currentStarCount = LoadStars(levelIndex);
@@ -24,6 +25,7 @@ public static class SaveManager
         PlayerPrefs.DeleteKey(string.Format(LevelKeyFormat, levelIndex));
     }
     
+    [Button("Delete All Stars")]
     public static void DeleteAllStars()
     {
         for (int i = 0; i < SceneManagerPersistent.Instance.LevelCount; i++)

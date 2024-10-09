@@ -28,6 +28,7 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
     [SerializeField][ShowIf(nameof(_isObjectItem))] 
     private LayerMask targetLayer;
     
+    [SerializeField] private Color hasObjectItemColor;
     [ReadOnly][SerializeField][HideIf(nameof(_isObjectItem))] private Placeable objectItem;
     protected SpriteRenderer spriteRenderer;
     private Color _originalColor;
@@ -85,8 +86,20 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
         if (!_isObjectItem || !targetPlaceable) return;
         GameManager.Instance.AddPlaceable(targetPlaceable);
         targetPlaceable.AssignObjectItem(this);
+        targetPlaceable.SetObjectItemColor();
         spriteRenderer.color = Color.clear;
         placeableCollider.enabled = false;
+    }
+    
+    public void SetObjectItemColor()
+    {
+        if (!spriteRenderer)
+        {
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            _originalColor = spriteRenderer.color;
+        }
+        
+        spriteRenderer.color = hasObjectItemColor;
     }
 
     public virtual void AssignObjectItem(Placeable item)
@@ -177,6 +190,7 @@ public abstract class Placeable : MonoBehaviour, IPointerClickHandler
     {
         SoundManager.Instance.PlaySoundFX(SoundFXTypes.MouseDeleteObjectItem, out _);
         ItemManager.Instance.ChangeItemAmount(objectItem.PlaceableType);
+        spriteRenderer.color = _originalColor;
         objectItem.DeactivateObjectItem();
         Destroy(objectItem.gameObject);
         objectItem = null;

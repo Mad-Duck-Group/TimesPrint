@@ -22,7 +22,8 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    [Header("UI Buttons")]
+    [Header("UI")]
+    [SerializeField] private HowToPlay howToPlay;
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button playButton;
     [SerializeField] private Button restartButton;
@@ -88,17 +89,19 @@ public class GameManager : MonoBehaviour
     private void Initialize()
     {
         SoundManager.Instance.PlaySoundFX(SoundFXTypes.Start, out _);
+        if (!SaveManager.ReadHowToPlay) Instantiate(howToPlay);
         _finishLoading = true;
         finishLoadingDelegate?.Invoke();
         clearButton.interactable = true;
         pausePanelButton.interactable = true;
-        Restart();
+        Time.timeScale = 0;
+        PlayOrPause();
     }
 
     private void Awake()
     {
         _instance = this;
-        Time.timeScale = 0;
+        //Time.timeScale = 0;
         timerHeader.text = FormatTime(_gameTime);
         pausedPanel.SetActive(false);
         winPanel.SetActive(false);

@@ -152,6 +152,7 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 0
+  hasObjectItemColor: {r: 0.78823537, g: 0.7058824, b: 0.24313727, a: 1}
   objectItem: {fileID: 0}
 --- !u!114 &3470441784329604022
 MonoBehaviour:

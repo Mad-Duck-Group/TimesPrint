@@ -94,6 +94,7 @@ public class Player : MonoBehaviour
         if (_deadCoroutine != null) StopCoroutine(_deadCoroutine);
         _spriteRenderer.flipX = false;
         isDead = false;
+        _countdownTimer = 0;
         _deadCoroutine = null;
     }
 
@@ -178,6 +179,7 @@ public class Player : MonoBehaviour
         if (_deadCoroutine != null) return;
         _anim.SetTrigger(wall ? Player_Dead_Wall : Player_Dead);
         isDead = true;
+        _countdownTimer = 0;
         state = UnitState.Move;
         SoundManager.Instance.PlayPlayerFX(PlayerFXTypes.Death, out _);
         isWalking = false;
