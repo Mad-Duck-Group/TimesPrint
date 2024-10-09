@@ -175,7 +175,7 @@ MonoBehaviour:
   speed: 5
   groundLayer:
     serializedVersion: 2
-    m_Bits: 385
+    m_Bits: 384
   boxCastDistance: 0.1
   isWalking: 0
   isFlipped: 0

@@ -92,8 +92,10 @@ public class Player : MonoBehaviour
     private void Restart()
     {
         if (_deadCoroutine != null) StopCoroutine(_deadCoroutine);
+        ResetSpeed();
         _spriteRenderer.flipX = false;
         isDead = false;
+        isStop = false;
         _countdownTimer = 0;
         _deadCoroutine = null;
     }
@@ -180,7 +182,9 @@ public class Player : MonoBehaviour
         _anim.SetTrigger(wall ? Player_Dead_Wall : Player_Dead);
         isDead = true;
         _countdownTimer = 0;
+        _playerRb.velocity = Vector2.zero;
         state = UnitState.Move;
+        isStop = false;
         SoundManager.Instance.PlayPlayerFX(PlayerFXTypes.Death, out _);
         isWalking = false;
         _deadCoroutine = StartCoroutine(DeadCoroutine());
@@ -206,6 +210,7 @@ public class Player : MonoBehaviour
         isWalking = walk;
         state = UnitState.Idle;
         speed = _originalSpeed;
+        _playerRb.velocity = Vector2.zero;
         isStop = false;
     }
 

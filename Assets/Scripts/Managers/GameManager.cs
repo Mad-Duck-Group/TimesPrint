@@ -126,7 +126,10 @@ public class GameManager : MonoBehaviour
     private string FormatTime(float seconds)
     {
         TimeSpan time = TimeSpan.FromSeconds(seconds);
-        return time.ToString("mm':'ss");
+        string formattedTime = time.Hours > 0 
+            ? time.ToString(@"hh\:mm\:ss") 
+            : time.ToString(@"mm\:ss");
+        return formattedTime;
     }
 
     private void UpdateTimer()
