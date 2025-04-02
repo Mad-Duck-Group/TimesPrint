@@ -66,3 +66,5 @@ MonoBehaviour:
     m_SceneName: Puzzle_Lv.5
   - m_SceneAsset: {fileID: 102900000, guid: 0eb49c1ceb6e89c419f1a2e29fcebc3b, type: 3}
     m_SceneName: Puzzle_Lv.6
+  - m_SceneAsset: {fileID: 102900000, guid: b889e846cad600742b5a47003ed70689, type: 3}
+    m_SceneName: Puzzle_Lv.7
