@@ -412,10 +412,10 @@ MonoBehaviour:
     m_OverlaysVisible: 1
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 6680ffffcc81ffff84cfffff
-      m_LastClickedID: -12412
-      m_ExpandedIDs: f0e6ffff76e8ffffd8f5ffff1afbffff8671000002720000067200002e730000d0730000
+      scrollPos: {x: 0, y: 320}
+      m_SelectedIDs: 18730000
+      m_LastClickedID: 29464
+      m_ExpandedIDs: 1afbffff5472000006730000fe73000036740000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -697,7 +697,7 @@ MonoBehaviour:
       containerId: overlay-container--right
       floating: 0
       collapsed: 0
-      displayed: 1
+      displayed: 0
       snapOffset: {x: -231, y: -197}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 3
@@ -1117,7 +1117,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scenes
+    - Assets/Scenes/Puzzle_Lv.6
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1125,7 +1125,7 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scenes
+  - Assets/Scenes/Puzzle_Lv.6
   m_LastFoldersGridSize: -1
   m_LastProjectPath: F:\All projects\Assignments\Level Design\TimesPrint
   m_LockTracker:
@@ -1189,7 +1189,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: b0420100d0d6000000000000f0ec01004a690200f86a0100acdbfeff40d1feff62590100e0710000da820000b2820000e87400002a720000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
